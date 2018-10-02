@@ -13,11 +13,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
+    private DatabaseReference usersReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +29,21 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference usersReference = firebaseDatabase.getReference("users");
-
+        usersReference = firebaseDatabase.getReference("users");
+        generateTestData();
 
     }
+
+    private void generateTestData(){
+        ArrayList<String> data = new ArrayList<String>();
+        data.add("a");
+        data.add("b");
+        data.add("c");
+
+        for(String s : data){
+            usersReference.push().setValue(s);
+        }
+
+    }
+
 }
