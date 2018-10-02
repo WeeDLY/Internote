@@ -14,6 +14,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
@@ -27,13 +29,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        usersReference = firebaseDatabase.getReference("name");
-        generateTestData();
-        Toast.makeText(this, "onCreate finished", Toast.LENGTH_SHORT).show();
-    }
+        DatabaseReference myRef = firebaseDatabase.getReference();
+        myRef.child("users").child(String.valueOf(1)).child("username").setValue("Gunnar");
 
+        //usersReference = firebaseDatabase.getReference("username");
+        //generateTestData();
+
+    }
     private void generateTestData(){
         ArrayList<String> data = new ArrayList<String>();
         data.add("a");
