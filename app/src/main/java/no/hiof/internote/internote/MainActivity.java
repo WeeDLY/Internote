@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        usersReference = firebaseDatabase.getReference("users");
+        usersReference = firebaseDatabase.getReference("name");
         generateTestData();
-
+        Toast.makeText(this, "onCreate finished", Toast.LENGTH_SHORT).show();
     }
 
     private void generateTestData(){
