@@ -6,14 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import no.hiof.internote.internote.model.NoteBasic;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
@@ -32,15 +29,15 @@ public class MainActivity extends AppCompatActivity {
         //myRef.setValue("Hello, World!");
     }
 
-    // Creating the options overflow menu
+    // Creating the options overflow toolbar_menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        inflater.inflate(R.menu.toolbar_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    // Handling the click on the menu item
+    // Handling the click on the toolbar_menu item
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
