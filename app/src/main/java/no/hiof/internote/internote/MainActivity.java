@@ -3,15 +3,18 @@ package no.hiof.internote.internote;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,11 +32,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference();
-        myRef.child("users").child(String.valueOf(1)).child("username").setValue("Gunnar");
-
-        //usersReference = firebaseDatabase.getReference("username");
+        try{
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = firebaseDatabase.getReference("users");
+            usersReference = firebaseDatabase.getReference("users");
+            generateTestData();
+        }
+        catch(Exception e){
+            Log.d("EXCEPTIONDECEPTION", "onCreate: " + e.getMessage());
+        }
         //generateTestData();
 
     }
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         data.add("c");
 
         for(String s : data){
+            Log.d("generateTest", "Pushing: " + s);
             usersReference.push().setValue(s);
         }
 
