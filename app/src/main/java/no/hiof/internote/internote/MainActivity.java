@@ -33,10 +33,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try{
+            DatabaseReference myRef1 = FirebaseDatabase.getInstance().getReference(); //Getting root reference
+            DatabaseReference myRef = myRef1.child("message"); //Write your child reference if any
+            myRef.setValue("Hello, World!");
+            /*
             firebaseDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = firebaseDatabase.getReference("users");
+            //DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+            //mDatabase.push().setValue(1);
+            //DatabaseReference myRef = firebaseDatabase.getReference("users");
             usersReference = firebaseDatabase.getReference("users");
-            generateTestData();
+            generateTestData();*/
         }
         catch(Exception e){
             Log.d("EXCEPTIONDECEPTION", "onCreate: " + e.getMessage());
