@@ -23,9 +23,9 @@ import java.util.Arrays;
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
 
+    private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
-    private FirebaseUser user;
     private FirebaseDatabase firebaseDatabase;
 
     private String email = "asd@gmail.com";
@@ -39,6 +39,12 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         createAuthenticationListener();
+    }
+
+    public void GoToMain(){
+        Intent intentMain = new Intent(this.getBaseContext(), MainActivity.class);
+        intentMain.putExtra("user", firebaseUser);
+        startActivity(intentMain);
     }
 
     @Override
@@ -64,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser == null) {
                     startActivityForResult(
                             AuthUI.getInstance()
@@ -75,6 +81,9 @@ public class LoginActivity extends AppCompatActivity {
                                                     new AuthUI.IdpConfig.GoogleBuilder().build()))
                                     .build(),
                             RC_SIGN_IN);
+                }
+                else{
+                    GoToMain();
                 }
             }
         };
@@ -89,17 +98,13 @@ public class LoginActivity extends AppCompatActivity {
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                Toast.makeText(this, "Signed in as " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                firebaseUser = firebaseAuth.getCurrentUser();
+                Toast.makeText(this, "Signed in as " + firebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
+                GoToMain();
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
-    }
-
-    public void BtnStartMain(View view) {
-        Intent i = new Intent(view.getContext(), MainActivity.class);
-        startActivity(i);
     }
 }
