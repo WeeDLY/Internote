@@ -41,37 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         createAuthenticationListener();
     }
 
-    public void GoToMainActivity(View view){
-        Intent intentMain = new Intent(view.getContext(), MainActivity.class);
-        startActivity(intentMain);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (firebaseAuth.getCurrentUser() != null){
-            Toast.makeText(this.getApplicationContext(), "User: " + user.getDisplayName(), Toast.LENGTH_LONG).show();
-            //GoToMainActivity();
-        }
-    }
-
-    private void createAuthenticationEmailPasswordListener() {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            // Successfull sign-in
-                            user = firebaseAuth.getCurrentUser();
-                        }
-                        else{
-                            // Failed to sign-in
-                            //Toast.makeText(EmailActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
