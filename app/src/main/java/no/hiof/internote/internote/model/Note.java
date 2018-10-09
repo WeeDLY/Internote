@@ -8,6 +8,12 @@ public abstract class Note{
     private Date creationDate;
     private ArrayList<String> Tags;
 
+    public Note(){}
+
+    public Note(Date creationDate){
+        this.creationDate = creationDate;
+    }
+
     public Note(String title, Date creationDate){
         this.title = title;
         this.creationDate = creationDate;
