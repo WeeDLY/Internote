@@ -6,6 +6,7 @@ import java.util.Date;
 public abstract class Note{
     private String title;
     private Date creationDate;
+    private String content;
     private ArrayList<String> Tags;
 
     public Note(){}
@@ -34,5 +35,18 @@ public abstract class Note{
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getContent(){
+        return this.content;
+    }
+
+    public void setContent(String content){
+        this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Title: " + getTitle() + " creationDate: " + getCreationDate().toString() + " content: " + getContent();
     }
 }
