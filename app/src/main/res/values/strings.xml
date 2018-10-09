@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Internote</string>
+    <string name="menuItem_overflow1">Log Out</string>
+    <string name="menuItem_overflow2">New Note</string>
 </resources>
