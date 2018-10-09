@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import no.hiof.internote.internote.model.NoteBasic;
+
 public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
 
@@ -29,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void BtnLogOut(View view) {
         Intent intent = new Intent(view.getContext(), LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void BtnNewNote(View view) {
+        Intent intent = new Intent(view.getContext(), NoteBasicActivity.class);
         startActivity(intent);
     }
 }
