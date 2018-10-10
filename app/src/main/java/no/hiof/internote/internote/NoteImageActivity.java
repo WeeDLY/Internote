@@ -21,7 +21,7 @@ import no.hiof.internote.internote.model.Settings;
 public class NoteImageActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private NoteDetailed noteDetailed;
-    private EditText editTextContent;
+    private EditText textContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class NoteImageActivity extends AppCompatActivity {
 
         EditText textCreationDate = findViewById(R.id.textCreationDate);
         textCreationDate.setText(noteDetailed.getCreationDate().toString());
-        editTextContent = findViewById(R.id.textContent);
+        textContent = findViewById(R.id.textContent);
     }
 
     /*
@@ -53,7 +53,13 @@ public class NoteImageActivity extends AppCompatActivity {
     Button: Saves your current noteDetailed to firebase, also takes you back to MainActivity afterwards
     */
     public void BtnSave(View view) {
-        noteDetailed.setContent(editTextContent.getText().toString());
+        // TODO: Have to save it locally
+        if(firebaseUser == null){
+            Toast.makeText(view.getContext(), "TODO: Save locally", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        noteDetailed.setContent(textContent.getText().toString());
 
         // Saves everything to firebase under the user
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(firebaseUser.getUid());
@@ -70,5 +76,9 @@ public class NoteImageActivity extends AppCompatActivity {
         Toast.makeText(view.getContext(), "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
         Intent mainIntent = new Intent(view.getContext(), MainActivity.class);
         startActivity(mainIntent);
+    }
+
+    public void imageViewClick(View view) {
+
     }
 }

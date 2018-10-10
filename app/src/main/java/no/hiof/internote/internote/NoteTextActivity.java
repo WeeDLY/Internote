@@ -4,6 +4,7 @@ import java.util.Date;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,7 +19,7 @@ import no.hiof.internote.internote.model.*;
 public class NoteTextActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private NoteDetailed noteDetailed;
-    private EditText editTextContent;
+    private EditText textContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,21 @@ public class NoteTextActivity extends AppCompatActivity {
             textTitle.setText(firebaseUser.getUid());
         }
 
+        // TODO: This is just temp to try to read data
+        String TEMPORARY_UID = "-LOSLijhtzuSjudQTAFU";
+
         noteDetailed = new NoteDetailed("BasicNote", new Date());
 
         EditText textCreationDate = findViewById(R.id.textCreationDate);
         textCreationDate.setText(noteDetailed.getCreationDate().toString());
-        editTextContent = findViewById(R.id.textContent);
+        textContent = findViewById(R.id.textContent);
+    }
+
+    private void retrieveDocument(String documentId){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference documentReference = firebaseDatabase.getReference().child(firebaseUser.getUid()).child(documentId);
+        Log.d("asd", documentReference.toString());
+
     }
 
     /*
@@ -50,7 +61,13 @@ public class NoteTextActivity extends AppCompatActivity {
         Button: Saves your current noteDetailed to firebase, also takes you back to MainActivity afterwards
      */
     public void BtnSave(View view) {
-        noteDetailed.setContent(editTextContent.getText().toString());
+        // TODO: Have to save it locally
+        if(firebaseUser == null){
+            Toast.makeText(view.getContext(), "TODO: Save locally", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        noteDetailed.setContent(textContent.getText().toString());
 
         // Saves everything to firebase under the user
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(firebaseUser.getUid());
@@ -64,7 +81,7 @@ public class NoteTextActivity extends AppCompatActivity {
         noteOverviewReference.setValue(new NoteOverview(noteDetailed, noteDetailedReference.getKey()));
 
         // Display that it was saved and auto-moves user to MainActivity
-        Toast.makeText(view.getContext(), "Saved note: " + noteDetailed.getTitle(), Toast.LENGTH_LONG).show();
+        Toast.makeText(view.getContext(), "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
         Intent mainIntent = new Intent(view.getContext(), MainActivity.class);
         startActivity(mainIntent);
     }
