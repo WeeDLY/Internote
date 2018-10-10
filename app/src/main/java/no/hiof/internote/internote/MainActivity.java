@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         //myRef.setValue("Hello, World!");
     }
 
-    // Creating the options overflow toolbar_menu
+    // Creating the options overflow toolbar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    // Handling the click on the toolbar_menu item
+    // Handling the tap on the toolbar menu item
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
