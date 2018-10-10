@@ -2,8 +2,8 @@ package no.hiof.internote.internote;
 
 import java.util.Date;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import no.hiof.internote.internote.model.*;
-import okhttp3.internal.cache.DiskLruCache;
 
 public class NoteTextActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
@@ -33,45 +31,48 @@ public class NoteTextActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_text);
 
+        textContent = findViewById(R.id.textContent);
+
         firebaseUser = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
         if(firebaseUser != null){
             TextView textTitle = findViewById(R.id.textTitle);
             textTitle.setText(firebaseUser.getUid());
+            // TODO: This is just temp to try to read data | MÅ VÆRE b@gmail.com brukeren
+            String TEMPORARY_UID = "-LOSZ1YpPO4YbmhHHAyF";
+            retrieveDocument(TEMPORARY_UID);
         }
+        else{
+            noteDetailed = new NoteDetailed("New note", "content", new Date());
+            FillFields();
+        }
+    }
 
-        // TODO: This is just temp to try to read data
-        String TEMPORARY_UID = "-LOSLijhtzuSjudQTAFU";
-        retrieveDocument(TEMPORARY_UID);
-
-        noteDetailed = new NoteDetailed("BasicNote", new Date());
+    private void FillFields(){
+        textContent.setText(noteDetailed.getContent());
 
         EditText textCreationDate = findViewById(R.id.textCreationDate);
         textCreationDate.setText(noteDetailed.getCreationDate().toString());
-        textContent = findViewById(R.id.textContent);
+
+        TextView textTitle = findViewById(R.id.textTitle);
+        textTitle.setText(noteDetailed.getTitle());
     }
 
-    private void retrieveDocument(final String documentId){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference documentReference = databaseReference.child(firebaseUser.getUid()).child(Settings.FIREBASE_NOTE_DETAILED);
-        documentReference.addListenerForSingleValueEvent(new ValueEventListener() {
+    /*
+        Retrieves document information from firebase
+     */
+    private void retrieveDocument(String documentId){
+        FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
+        DatabaseReference documentReference = databaseReference.getReference();
+        documentReference.child(firebaseUser.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snap : dataSnapshot.getChildren()){
-                    Log.d("GotNoteDetailed", "testooni: " + snap.getKey());
-                    Log.d("GotNoteDetailed", "testooni: " + snap.getValue());
-                    //NoteDetailed noteDetailed = snap.getValue(NoteDetailed.class);
-                    if(noteDetailed == null){
-                        Log.d("GotNoteDetailed","WRONG" );
-                        return;
-                    }
-                    Log.d("GotNoteDetailed","CORRECT" );
-                    textContent.setText(noteDetailed.getContent());
-                }
+                noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
+                FillFields();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d("retrieveDocument.cancel", "something went funky wunky");
             }
         });
     }
