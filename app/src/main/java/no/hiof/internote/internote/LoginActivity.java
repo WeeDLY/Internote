@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
                 firebaseUser = firebaseAuth.getCurrentUser();
+                // User not signed in, show sign in options
                 if (firebaseUser == null) {
                     startActivityForResult(
                             AuthUI.getInstance()
@@ -85,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                                     .build(),
                             RC_SIGN_IN);
                 }
+                // User already signed in
                 else{
                     GoToMain();
                 }
