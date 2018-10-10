@@ -7,6 +7,10 @@ enum Theme{
 }
 
 public class Settings {
+    public final static String FIREBASEUSER_INTENT = "firebaseUser";
+    public final static String FIREBASE_NOTE_OVERVIEW = "NoteOverview";
+    public final static String FIREBASE_NOTE_DETAILED = "NoteDetailed";
+
     private int fontSize;
     private String fontFamily;
     private Theme theme;

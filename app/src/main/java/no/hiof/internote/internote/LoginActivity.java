@@ -15,6 +15,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
+import no.hiof.internote.internote.model.Settings;
+
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
 
@@ -49,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         Sends user directly to MainActivity
      */
     public void GoToMain(){
-        Intent intentMain = new Intent(this.getBaseContext(), MainActivity.class);
-        intentMain.putExtra("user", firebaseUser);
+        Intent intentMain = new Intent(this, NoteImageActivity.class);
+        intentMain.putExtra(Settings.FIREBASEUSER_INTENT, firebaseUser);
         startActivity(intentMain);
     }
 

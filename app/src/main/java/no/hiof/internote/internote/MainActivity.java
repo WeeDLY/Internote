@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startLoginActivity);
                 break;
             case R.id.menuItem_overflow2:
-                Intent startNoteBasicActivity = new Intent(this, NoteBasicActivity.class);
+                Intent startNoteBasicActivity = new Intent(this, NoteTextActivity.class);
                 startActivity(startNoteBasicActivity);
                 break;
         }

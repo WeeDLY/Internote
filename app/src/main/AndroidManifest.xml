@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".NoteBasicActivity"></activity>
+        <activity android:name=".NoteTextActivity" />
+        <activity android:name=".NoteImageActivity"></activity>
     </application>
 
 </manifest>
