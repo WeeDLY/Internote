@@ -1,22 +1,17 @@
 package no.hiof.internote.internote;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ui.email.EmailActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
@@ -26,21 +21,33 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
-    private FirebaseDatabase firebaseDatabase;
-
-    private String email = "asd@gmail.com";
-    private String password = "asdasd";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        boolean internetAvailable = hasNetworkConnection();
 
-        createAuthenticationListener();
+        if(internetAvailable){
+            firebaseAuth = FirebaseAuth.getInstance();
+            createAuthenticationListener();
+        }
+        GoToMain();
     }
 
+    /*
+        Check if user has internet connection
+     */
+    private boolean hasNetworkConnection(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected()) ? true : false;
+    }
+
+    /*
+        Sends user directly to MainActivity
+     */
     public void GoToMain(){
         Intent intentMain = new Intent(this.getBaseContext(), MainActivity.class);
         intentMain.putExtra("user", firebaseUser);
@@ -57,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         if (firebaseAuthStateListener != null)
             firebaseAuth.removeAuthStateListener(firebaseAuthStateListener);
     }
@@ -95,13 +101,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /*
-        Event that is fired after createAuthenticationListener
+        Callback from createAuthenticationListener
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i("onActivityResult:", "ASDASD: " + requestCode);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 firebaseUser = firebaseAuth.getCurrentUser();
