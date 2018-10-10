@@ -1,25 +1,32 @@
 package no.hiof.internote.internote.model;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 
-public abstract class Note{
+/*
+    abstract class Note
+ */
+public abstract class Note {
     private String title;
-    private Date creationDate;
-    private String content;
-    private ArrayList<String> Tags;
+    private Date lastEdited;
+    private String imageUrl;
 
-    public Note(){}
-
-    public Note(Date creationDate){
-        this.creationDate = creationDate;
+    public Note(NoteDetailed noteDetailed){
+        this.title = noteDetailed.getTitle();
+        this.lastEdited = noteDetailed.getLastEdited();
+        this.imageUrl = noteDetailed.getImageUrl();
     }
 
-    public Note(String title, Date creationDate){
+    public Note(String title, Date lastEdited){
         this.title = title;
-        this.creationDate = creationDate;
+        this.lastEdited = lastEdited;
     }
 
+    public Note(String title, Date lastEdited, String imageUrl){
+        this.title = title;
+        this.lastEdited = lastEdited;
+        this.imageUrl = imageUrl;
+    }
 
     public String getTitle() {
         return title;
@@ -29,24 +36,22 @@ public abstract class Note{
         this.title = title;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Date getLastEdited() {
+        return lastEdited;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setLastEdited(Date lastEdited) {
+        this.lastEdited = lastEdited;
     }
 
-    public String getContent(){
-        return this.content;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setContent(String content){
-        this.content = content;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
+    //TODO: Tags?
 
-    @Override
-    public String toString() {
-        return "Title: " + getTitle() + " creationDate: " + getCreationDate().toString() + " content: " + getContent();
-    }
+
 }
