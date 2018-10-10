@@ -77,8 +77,11 @@ public class LoginActivity extends AppCompatActivity {
                                     .createSignInIntentBuilder()
                                     .setIsSmartLockEnabled(false)
                                     .setAvailableProviders(
-                                            Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
-                                                    new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                            Arrays.asList(
+                                                    new AuthUI.IdpConfig.EmailBuilder().build(),
+                                                    new AuthUI.IdpConfig.GoogleBuilder().build()
+                                            )
+                                    )
                                     .build(),
                             RC_SIGN_IN);
                 }
@@ -96,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.i("onActivityResult:", "ASDASD: " + requestCode);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 firebaseUser = firebaseAuth.getCurrentUser();
