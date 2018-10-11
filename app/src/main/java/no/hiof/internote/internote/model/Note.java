@@ -11,6 +11,8 @@ public abstract class Note {
     private Date lastEdited;
     private String imageUrl;
 
+    public Note(){}
+
     public Note(NoteDetailed noteDetailed){
         this.title = noteDetailed.getTitle();
         this.lastEdited = noteDetailed.getLastEdited();

@@ -15,8 +15,22 @@ public class NoteDetailed extends Note{
     private String content;
     private Date creationDate;
 
+    public NoteDetailed(){super();}
+
+    public NoteDetailed(String title, String content, Date creationDate){
+        super(title, creationDate);
+        this.content = content;
+        this.creationDate = creationDate;
+    }
+
     public NoteDetailed(String title, Date creationDate){
         super(title, creationDate); // Passing creationDate as lastEdited
+        this.creationDate = creationDate;
+    }
+
+    public NoteDetailed(String title, Date lastEdited, String content, Date creationDate){
+        super(title, lastEdited);
+        this.content = content;
         this.creationDate = creationDate;
     }
 
