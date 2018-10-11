@@ -1,12 +1,14 @@
 package no.hiof.internote.internote.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -14,48 +16,72 @@ import no.hiof.internote.internote.R;
 import no.hiof.internote.internote.model.NoteOverview;
 
 public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapter.NoteViewHolder> {
-
-    private List<NoteOverview> noteList;
+    private List<NoteOverview> data;
     private LayoutInflater inflater;
 
-    public NoteRecyclerAdapter(Context context, List<NoteOverview> noteList) {
-        inflater = LayoutInflater.from(context);
-        this.noteList = noteList;
+    private View.OnClickListener clickListener;
+
+    public void setOnItemClickListener(View.OnClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
-    @NonNull
-    @Override
-    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-        View itemView = inflater.inflate(R.layout.layout_listitem, parent, false);
-
-        return new NoteViewHolder(itemView);
+    public NoteRecyclerAdapter(Context context, List<NoteOverview> data) {
+        this.data = data;
+        this.inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoteViewHolder viewHolder, int position) {
-        NoteOverview noteToDisplay = noteList.get(position);
-        viewHolder.textView_title.setText(NoteOverview.get);
+    public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.layout_listitem, parent, false);
+        NoteViewHolder holder = new NoteViewHolder(view);
+
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(NoteViewHolder holder, int position) {
+        NoteOverview current_Object = data.get(position);
+        holder.setData(current_Object);
+
+        if (clickListener != null) {
+            holder.itemView.setOnClickListener(clickListener);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return noteList.size();
+        return data.size();
     }
 
-    public class NoteViewHolder extends RecyclerView.ViewHolder {
-        //ImageView imageView_thumbnail;
-        TextView textView_title, textView_lastEdited;
-        private int position;
-
+    class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView title;
+        TextView lastEdited;
+        ImageView thumbnail;
 
         public NoteViewHolder(View itemView) {
             super(itemView);
+            title = itemView.findViewById(R.id.textView_listItem_title);
+            lastEdited = itemView.findViewById(R.id.textView_listItem_lastEdited);
+            thumbnail = itemView.findViewById(R.id.imageView_thumbnail);
+        }
 
-            //imageView_thumbnail = itemView.findViewById(R.id.imageView_thumbnail);
-            textView_title = itemView.findViewById(R.id.textView_listItem_title);
-            textView_lastEdited = itemView.findViewById(R.id.textView_listItem_lastEdited);
+        public void setData(NoteOverview current) {
+            this.title.setText(current.getTitle());
 
-            itemView.setOnClickListener(this);
+            String imageUrl = current.getImageUrl();
+
+            if (imageUrl != null && !imageUrl.equals("")) {
+                Glide.with(thumbnail.getContext())
+                        .load(imageUrl)
+                        .into(thumbnail);
+            }
+            else
+                thumbnail.setImageResource(R.drawable.thumbnail_placeholder);
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }
