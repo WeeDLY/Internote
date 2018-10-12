@@ -19,7 +19,7 @@ import no.hiof.internote.internote.model.NoteOverview;
 import no.hiof.internote.internote.model.Settings;
 
 public class NoteImageActivity extends AppCompatActivity {
-    private FirebaseUser firebaseUser;
+    private FirebaseUser user;
     private NoteDetailed noteDetailed;
     private EditText textContent;
 
@@ -28,16 +28,16 @@ public class NoteImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_image);
 
-        firebaseUser = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
-        if(firebaseUser != null){
+        user = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
+        if(user != null){
             TextView textTitle = findViewById(R.id.textTitle);
-            textTitle.setText(firebaseUser.getUid());
+            textTitle.setText(user.getUid());
         }
 
-        noteDetailed = new NoteDetailed("BasicNote", new Date());
+        noteDetailed = new NoteDetailed("BasicNote", System.currentTimeMillis());
 
         EditText textCreationDate = findViewById(R.id.textCreationDate);
-        textCreationDate.setText(noteDetailed.getCreationDate().toString());
+        textCreationDate.setText(new Date(noteDetailed.getCreationDate() * 1000).toString());
         textContent = findViewById(R.id.textContent);
     }
 
@@ -45,8 +45,9 @@ public class NoteImageActivity extends AppCompatActivity {
     Button: Takes you back to MainActivity
     */
     public void btnMainMenu(View view) {
-        Intent intent = new Intent(view.getContext(), MainActivity.class);
-        startActivity(intent);
+        Intent intentMain = new Intent(view.getContext(), MainActivity.class);
+        intentMain.putExtra(Settings.FIREBASEUSER_INTENT, user);
+        startActivity(intentMain);
     }
 
     /*
@@ -54,7 +55,7 @@ public class NoteImageActivity extends AppCompatActivity {
     */
     public void BtnSave(View view) {
         // TODO: Have to save it locally
-        if(firebaseUser == null){
+        if(user == null){
             Toast.makeText(view.getContext(), "TODO: Save locally", Toast.LENGTH_LONG).show();
             return;
         }
@@ -62,7 +63,7 @@ public class NoteImageActivity extends AppCompatActivity {
         noteDetailed.setContent(textContent.getText().toString());
 
         // Saves everything to firebase under the user
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(firebaseUser.getUid());
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
 
         // Saves detailed information about the note
         DatabaseReference noteDetailedReference = userReference.child(Settings.FIREBASE_NOTE_DETAILED).push();

@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import no.hiof.internote.internote.model.*;
 
 public class NoteTextActivity extends AppCompatActivity {
-    private FirebaseUser firebaseUser;
+    private FirebaseUser user;
     private NoteDetailed noteDetailed;
     private EditText textContent;
 
@@ -33,16 +33,17 @@ public class NoteTextActivity extends AppCompatActivity {
 
         textContent = findViewById(R.id.textContent);
 
-        firebaseUser = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
-        if(firebaseUser != null){
+        user = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
+        if(user != null){
             TextView textTitle = findViewById(R.id.textTitle);
-            textTitle.setText(firebaseUser.getUid());
+            textTitle.setText(user.getUid());
+            noteDetailed = new NoteDetailed("New note", "", System.currentTimeMillis());
             // TODO: This is just temp to try to read data | MÅ VÆRE b@gmail.com brukeren
-            String TEMPORARY_UID = "-LOSZ1YpPO4YbmhHHAyF";
+            String TEMPORARY_UID = "-LOcLHrBkPA2rsREJ5B6";
             retrieveDocument(TEMPORARY_UID);
         }
         else{
-            noteDetailed = new NoteDetailed("New note", "content", new Date());
+            noteDetailed = new NoteDetailed("New note", "content", System.currentTimeMillis());
             FillFields();
         }
     }
@@ -51,7 +52,7 @@ public class NoteTextActivity extends AppCompatActivity {
         textContent.setText(noteDetailed.getContent());
 
         EditText textCreationDate = findViewById(R.id.textCreationDate);
-        textCreationDate.setText(noteDetailed.getCreationDate().toString());
+        textCreationDate.setText(new Date(noteDetailed.getCreationDate() * 1000).toString());
 
         TextView textTitle = findViewById(R.id.textTitle);
         textTitle.setText(noteDetailed.getTitle());
@@ -63,7 +64,7 @@ public class NoteTextActivity extends AppCompatActivity {
     private void retrieveDocument(String documentId){
         FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
         DatabaseReference documentReference = databaseReference.getReference();
-        documentReference.child(firebaseUser.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
+        documentReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
@@ -81,16 +82,17 @@ public class NoteTextActivity extends AppCompatActivity {
         Button: Takes you back to MainActivity
      */
     public void btnMainMenu(View view) {
-        Intent intent = new Intent(view.getContext(), MainActivity.class);
-        startActivity(intent);
+        Intent intentMain = new Intent(view.getContext(), MainActivity.class);
+        intentMain.putExtra(Settings.FIREBASEUSER_INTENT, user);
+        startActivity(intentMain);
     }
 
     /*
         Button: Saves your current noteDetailed to firebase, also takes you back to MainActivity afterwards
      */
-    public void BtnSave(View view) {
+    public void btnSave(View view) {
         // TODO: Have to save it locally
-        if(firebaseUser == null){
+        if(user == null){
             Toast.makeText(view.getContext(), "TODO: Save locally", Toast.LENGTH_LONG).show();
             return;
         }
@@ -98,7 +100,7 @@ public class NoteTextActivity extends AppCompatActivity {
         noteDetailed.setContent(textContent.getText().toString());
 
         // Saves everything to firebase under the user
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(firebaseUser.getUid());
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
 
         // Saves detailed information about the note
         DatabaseReference noteDetailedReference = userReference.child(Settings.FIREBASE_NOTE_DETAILED).push();

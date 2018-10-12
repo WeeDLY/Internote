@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public abstract class Note {
     private String title;
-    private Date lastEdited;
+    private long lastEdited;
     private String imageUrl;
 
     public Note(){}
@@ -19,12 +19,12 @@ public abstract class Note {
         this.imageUrl = noteDetailed.getImageUrl();
     }
 
-    public Note(String title, Date lastEdited){
+    public Note(String title, long lastEdited){
         this.title = title;
         this.lastEdited = lastEdited;
     }
 
-    public Note(String title, Date lastEdited, String imageUrl){
+    public Note(String title, long lastEdited, String imageUrl){
         this.title = title;
         this.lastEdited = lastEdited;
         this.imageUrl = imageUrl;
@@ -38,11 +38,11 @@ public abstract class Note {
         this.title = title;
     }
 
-    public Date getLastEdited() {
+    public long getLastEdited() {
         return lastEdited;
     }
 
-    public void setLastEdited(Date lastEdited) {
+    public void setLastEdited(long lastEdited) {
         this.lastEdited = lastEdited;
     }
 
@@ -56,4 +56,8 @@ public abstract class Note {
     //TODO: Tags?
 
 
+    @Override
+    public String toString() {
+        return "Title: " + getTitle() + " lastEdited" + new Date(getLastEdited() * 1000) + " imageUrl: " + getImageUrl();
+    }
 }

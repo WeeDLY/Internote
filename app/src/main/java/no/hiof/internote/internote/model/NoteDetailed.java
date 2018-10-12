@@ -13,45 +13,46 @@ import java.util.Date;
  */
 public class NoteDetailed extends Note{
     private String content;
-    private Date creationDate;
+    private long creationDate;
 
-    public NoteDetailed(){super();}
+    // Empty constructor for Firebase -> object
+    public NoteDetailed(){ super(); }
 
-    public NoteDetailed(String title, String content, Date creationDate){
+    public NoteDetailed(String title, String content, long creationDate){
         super(title, creationDate);
         this.content = content;
         this.creationDate = creationDate;
     }
 
-    public NoteDetailed(String title, Date creationDate){
+    public NoteDetailed(String title, long creationDate){
         super(title, creationDate); // Passing creationDate as lastEdited
         this.creationDate = creationDate;
     }
 
-    public NoteDetailed(String title, Date lastEdited, String content, Date creationDate){
+    public NoteDetailed(String title, long lastEdited, String content, long creationDate){
         super(title, lastEdited);
         this.content = content;
         this.creationDate = creationDate;
     }
 
-    public NoteDetailed(String title, Date lastEdited, String imageUrl, String content, Date creationDate){
+    public NoteDetailed(String title, long lastEdited, String imageUrl, String content, long creationDate){
         super(title, lastEdited, imageUrl);
         this.content = content;
         this.creationDate = creationDate;
     }
 
-    public Date getCreationDate() {
+    public long getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(long creationDate) {
         this.creationDate = creationDate;
     }
 
 
     @Override
     public String toString() {
-        return "Title: " + getTitle() + " creationDate: " + getCreationDate().toString() + " content: " + getContent();
+        return "Title: " + getTitle() + " creationDate: " + new Date(getCreationDate() * 1000).toString() + " content: " + getContent();
     }
 
     public String getContent() {

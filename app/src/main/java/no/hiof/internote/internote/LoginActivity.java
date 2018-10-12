@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         Sends user directly to MainActivity
      */
     public void GoToMain(){
-        Intent intentMain = new Intent(this, NoteTextActivity.class);
+        Intent intentMain = new Intent(this, MainActivity.class);
         intentMain.putExtra(Settings.FIREBASEUSER_INTENT, firebaseUser);
         startActivity(intentMain);
     }
