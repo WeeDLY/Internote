@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private boolean hasNetworkConnection(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected()) ? true : false;
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     /*
