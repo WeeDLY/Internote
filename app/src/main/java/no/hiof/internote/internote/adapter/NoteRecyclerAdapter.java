@@ -1,7 +1,9 @@
 package no.hiof.internote.internote.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import no.hiof.internote.internote.NoteTextActivity;
 import no.hiof.internote.internote.R;
 import no.hiof.internote.internote.model.NoteOverview;
 
@@ -80,8 +83,9 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         }
 
         @Override
-        public void onClick(View v) {
-
+        public void onClick(View view) {
+            Intent intent = new Intent(view.getContext(), NoteTextActivity.class);
+            view.getContext().startActivity(intent);
         }
     }
 }

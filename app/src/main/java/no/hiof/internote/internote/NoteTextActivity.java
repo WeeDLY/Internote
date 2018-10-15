@@ -34,13 +34,20 @@ public class NoteTextActivity extends AppCompatActivity {
         textContent = findViewById(R.id.textContent);
 
         user = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
+        String noteId = getIntent().getStringExtra(Settings.INTENT_NOTE_ID);
+        if(noteId == null){
+            Log.d("noteIDD: ", "IS NULL");
+        }
+        else{
+            Log.d("noteIDD: ", noteId);
+        }
         if(user != null){
             TextView textTitle = findViewById(R.id.textTitle);
             textTitle.setText(user.getUid());
             noteDetailed = new NoteDetailed("New note", "", System.currentTimeMillis());
             // TODO: This is just temp to try to read data | MÅ VÆRE b@gmail.com brukeren
-            String TEMPORARY_UID = "-LOcLHrBkPA2rsREJ5B6";
-            retrieveDocument(TEMPORARY_UID);
+            String TEMPORARY_UID = "-LOrFFUgJS8VPqetss8G";
+            retrieveDocument(noteId);
         }
         else{
             noteDetailed = new NoteDetailed("New note", "content", System.currentTimeMillis());

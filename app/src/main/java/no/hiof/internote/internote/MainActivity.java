@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,9 +70,13 @@ public class MainActivity extends AppCompatActivity {
                 int position = recyclerView.getChildAdapterPosition(view);
 
                 NoteOverview note = notes.get(position);
+
                 // TODO: Not sure what to do here.
-                //Intent intent = new Intent(MainActivity.this, NoteOverview.class);
-                //intent.putExtra(NoteOverview.)
+                Intent intent = new Intent(MainActivity.this, NoteTextActivity.class);
+                intent.putExtra(Settings.FIREBASEUSER_INTENT, user);
+                intent.putExtra(Settings.INTENT_NOTE_ID, note.getUid());
+                Log.d("recyclerView", note.getUid());
+                startActivity(intent);
             }
         });
         recyclerView.setAdapter(noteRecyclerAdapter);

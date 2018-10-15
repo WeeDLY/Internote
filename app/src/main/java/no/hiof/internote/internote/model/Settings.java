@@ -4,6 +4,8 @@ public class Settings {
     public final static String FIREBASEUSER_INTENT = "firebaseUser";
     public final static String FIREBASE_NOTE_OVERVIEW = "NoteOverview";
     public final static String FIREBASE_NOTE_DETAILED = "NoteDetailed";
+    public final static String INTENT_NOTE_ID = "Note_ID";
+    public final static String INTENT_BUNDLE = "BUNDLE_EXTRA";
 
     private int fontSize;
     private String fontFamily;
