@@ -57,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setUpRecyclerView();
     }
 
-    /*
-        Sets up the RecyclerView
-     */
+    // Sets up RecyclerView
     private void setUpRecyclerView(){
         recyclerView = findViewById(R.id.recyclerView);
         noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
@@ -71,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
                 NoteOverview note = notes.get(position);
 
-                // TODO: Not sure what to do here.
                 Intent intent = new Intent(MainActivity.this, NoteTextActivity.class);
                 intent.putExtra(Settings.FIREBASEUSER_INTENT, user);
-                intent.putExtra(Settings.INTENT_NOTE_ID, note.getUid());
+                intent.putExtra(Settings.INTENT_NOTEDETAILED_KEY, note.getUid());
+                intent.putExtra(Settings.INTENT_NOTEOVERVIEW_KEY, note.getKey());
                 Log.d("recyclerView", note.getUid());
                 startActivity(intent);
             }
@@ -93,8 +91,11 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snap : dataSnapshot.getChildren()){
                     NoteOverview noteOverview = snap.getValue(NoteOverview.class);
-                    notes.add(noteOverview);
-                    noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
+                    noteOverview.setKey(snap.getKey());
+                    if(!notes.contains(noteOverview)){
+                        notes.add(noteOverview);
+                        noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
+                    }
                 }
             }
 

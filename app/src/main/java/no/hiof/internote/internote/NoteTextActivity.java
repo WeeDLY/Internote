@@ -26,6 +26,11 @@ public class NoteTextActivity extends AppCompatActivity {
     private NoteDetailed noteDetailed;
     private EditText textContent;
 
+    private DatabaseReference noteDetailedReference;
+
+    private String currentNoteDetailedKey = "";
+    private String currentNoteOverviewKey = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,24 +39,17 @@ public class NoteTextActivity extends AppCompatActivity {
         textContent = findViewById(R.id.textContent);
 
         user = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
-        String noteId = getIntent().getStringExtra(Settings.INTENT_NOTE_ID);
-        if(noteId == null){
-            Log.d("noteIDD: ", "IS NULL");
-        }
-        else{
-            Log.d("noteIDD: ", noteId);
-        }
-        if(user != null){
-            TextView textTitle = findViewById(R.id.textTitle);
-            textTitle.setText(user.getUid());
-            noteDetailed = new NoteDetailed("New note", "", System.currentTimeMillis());
-            // TODO: This is just temp to try to read data | MÅ VÆRE b@gmail.com brukeren
-            String TEMPORARY_UID = "-LOrFFUgJS8VPqetss8G";
-            retrieveDocument(noteId);
-        }
-        else{
+        currentNoteDetailedKey = getIntent().getStringExtra(Settings.INTENT_NOTEDETAILED_KEY);
+        currentNoteOverviewKey = getIntent().getStringExtra(Settings.INTENT_NOTEOVERVIEW_KEY);
+
+        if(user == null){
             noteDetailed = new NoteDetailed("New note", "content", System.currentTimeMillis());
             FillFields();
+            return;
+        }
+
+        if (!currentNoteDetailedKey.equals("")){
+            retrieveDocument(currentNoteDetailedKey);
         }
     }
 
@@ -89,7 +87,12 @@ public class NoteTextActivity extends AppCompatActivity {
         Button: Takes you back to MainActivity
      */
     public void btnMainMenu(View view) {
-        Intent intentMain = new Intent(view.getContext(), MainActivity.class);
+        MoveToMain();
+    }
+
+    // Moves you to MainMenu
+    private void MoveToMain(){
+        Intent intentMain = new Intent(this, MainActivity.class);
         intentMain.putExtra(Settings.FIREBASEUSER_INTENT, user);
         startActivity(intentMain);
     }
@@ -98,28 +101,47 @@ public class NoteTextActivity extends AppCompatActivity {
         Button: Saves your current noteDetailed to firebase, also takes you back to MainActivity afterwards
      */
     public void btnSave(View view) {
-        // TODO: Have to save it locally
+        // TODO: Have to save it locally. Not logged in as a user
         if(user == null){
             Toast.makeText(view.getContext(), "TODO: Save locally", Toast.LENGTH_LONG).show();
             return;
         }
 
         noteDetailed.setContent(textContent.getText().toString());
+        noteDetailed.setLastEdited(System.currentTimeMillis());
 
-        // Saves everything to firebase under the user
+
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
+        // Update NoteDetailed to firebase
 
-        // Saves detailed information about the note
-        DatabaseReference noteDetailedReference = userReference.child(Settings.FIREBASE_NOTE_DETAILED).push();
+        // Note was loaded from a previous note. Overwrite with new data
+        if(!currentNoteDetailedKey.equals("")){
+            noteDetailedReference = userReference.child(Settings.FIREBASE_NOTE_DETAILED).child(currentNoteDetailedKey);
+        }
+        // Note does not exist, writes a new NoteDetailed to database
+        else{
+            noteDetailedReference = userReference.child(Settings.FIREBASE_NOTE_DETAILED).push();
+        }
         noteDetailedReference.setValue(noteDetailed);
 
-        // Saves the note overview
-        DatabaseReference noteOverviewReference = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).push();
-        noteOverviewReference.setValue(new NoteOverview(noteDetailed, noteDetailedReference.getKey()));
+
+        // Update NoteOverview to firebase
+        if(!currentNoteOverviewKey.equals("")){
+            DatabaseReference noteOverviewReference = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
+            noteOverviewReference.child("lastEdited").setValue(noteDetailed.getLastEdited());
+            noteOverviewReference.child("title").setValue(noteDetailed.getTitle());
+
+        }
+        // NoteOver does not exist, writes a new NoteOverview to database
+        else{
+            DatabaseReference noteOverviewReference = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).push();
+            noteOverviewReference.setValue(new NoteOverview(noteDetailed, noteDetailedReference.getKey()));
+        }
+
+        Log.d("noteoverviewkey", "TTT: " + currentNoteOverviewKey);
 
         // Display that it was saved and auto-moves user to MainActivity
         Toast.makeText(view.getContext(), "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
-        Intent mainIntent = new Intent(view.getContext(), MainActivity.class);
-        startActivity(mainIntent);
+        MoveToMain();
     }
-}
+};

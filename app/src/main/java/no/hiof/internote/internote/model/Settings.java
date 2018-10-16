@@ -4,8 +4,9 @@ public class Settings {
     public final static String FIREBASEUSER_INTENT = "firebaseUser";
     public final static String FIREBASE_NOTE_OVERVIEW = "NoteOverview";
     public final static String FIREBASE_NOTE_DETAILED = "NoteDetailed";
-    public final static String INTENT_NOTE_ID = "Note_ID";
-    public final static String INTENT_BUNDLE = "BUNDLE_EXTRA";
+
+    public final static String INTENT_NOTEDETAILED_KEY = "Note_DETAILED_KEY"; // NoteDetailedKey. Used to update NoteDetailed
+    public final static String INTENT_NOTEOVERVIEW_KEY = "NOTE_OVERVIEW_KEY"; // NoteOverviewKey. Used to update "lastEdited"
 
     private int fontSize;
     private String fontFamily;

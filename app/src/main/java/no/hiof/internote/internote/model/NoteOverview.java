@@ -1,5 +1,7 @@
 package no.hiof.internote.internote.model;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.Date;
 
 /*
@@ -8,6 +10,10 @@ import java.util.Date;
  */
 public class NoteOverview extends Note{
     private String uid;
+
+    @Exclude
+    private String key;
+
 
     // Empty constructor for Firebase -> object
     public NoteOverview(){ super(); }
@@ -32,5 +38,13 @@ public class NoteOverview extends Note{
     @Override
     public String toString() {
         return "uid: " + getUid() + super.toString();
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
