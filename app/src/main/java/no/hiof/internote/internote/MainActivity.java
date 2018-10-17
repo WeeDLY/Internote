@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private NoteRecyclerAdapter noteRecyclerAdapter;
 
+    /*
+        onCreate lifecycle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,14 +62,20 @@ public class MainActivity extends AppCompatActivity {
         setUpRecyclerView();
     }
 
+    /*
+        onStart lifecycle
+     */
     @Override
     protected void onStart() {
+        // Clear recycleview list
         noteRecyclerAdapter.notifyItemRangeRemoved(0, notes.size());
         notes.clear();
         super.onStart();
     }
 
-    // Sets up RecyclerView
+    /*
+        Sets up RecyclerView
+     */
     private void setUpRecyclerView(){
         recyclerView = findViewById(R.id.recyclerView);
         noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
@@ -90,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
     }
 
-    // Sets up the floating action button
+    /*
+        Sets up the floating action button
+     */
     public void setUpFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab);
 
@@ -104,7 +115,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Retrieves documents that the user has
+    /*
+        Retrieves documents that the user has
+     */
     private void retrieveUserDocuments(FirebaseUser user){
         FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
         DatabaseReference documentsReference = databaseReference.getReference();
@@ -128,7 +141,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Creating the options overflow toolbar menu
+    /*
+        Creating the options overflow toolbar menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -136,7 +151,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    // Handling the tap on the toolbar menu item
+    /*
+        Handling the tap on the toolbar menu item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
