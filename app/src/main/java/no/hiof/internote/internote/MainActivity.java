@@ -83,9 +83,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
     }
 
-    /*
-        Sets up the Floating action button
-     */
+    // Sets up the floating action button
     public void setUpFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab);
 
