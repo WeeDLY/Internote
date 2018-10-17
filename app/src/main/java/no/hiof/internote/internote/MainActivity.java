@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.menuItem_overflow1:
+                FirebaseAuth.getInstance().signOut();
                 Intent startLoginActivity = new Intent(this, LoginActivity.class);
                 startActivity(startLoginActivity);
                 break;
