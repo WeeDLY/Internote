@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "No user logged in", Toast.LENGTH_LONG).show();
         }
 
+        setUpFloatingActionButton();
         setUpRecyclerView();
     }
 
@@ -81,6 +83,21 @@ public class MainActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(noteRecyclerAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+    }
+
+    /*
+        Sets up the Floating action button
+     */
+    public void setUpFloatingActionButton() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteTextActivity.class);
+                startActivity(startNoteBasicActivity);
+            }
+        });
     }
 
     // Retrieves documents that the user has
