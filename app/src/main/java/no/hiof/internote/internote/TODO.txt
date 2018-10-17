@@ -1,0 +1,6 @@
+TODO
+1.
+
+
+BUGS
+1. Logging in(for the first time, not auto-login), letting it load your notes, then pressing the "back button", will remove all the notes.

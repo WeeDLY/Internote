@@ -32,7 +32,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:inputType="text"
         android:hint="@string/note_title_filler"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHeader"
         app:layout_constraintEnd_toStartOf="@+id/guildelineMiddle"
