@@ -59,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
         setUpRecyclerView();
     }
 
+    @Override
+    protected void onStart() {
+        noteRecyclerAdapter.notifyItemRangeRemoved(0, notes.size());
+        notes.clear();
+        super.onStart();
+    }
+
     // Sets up RecyclerView
     private void setUpRecyclerView(){
         recyclerView = findViewById(R.id.recyclerView);
