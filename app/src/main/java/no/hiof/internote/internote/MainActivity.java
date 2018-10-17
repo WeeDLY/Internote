@@ -99,6 +99,14 @@ public class MainActivity extends AppCompatActivity {
     public void setUpFloatingActionButton() {
         FloatingActionButton fab = findViewById(R.id.fab);
 
+        fab.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(view.getContext(), "TODO: Overflow menu", Toast.LENGTH_LONG).show();
+                return true;
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
