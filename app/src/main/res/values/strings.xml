@@ -4,4 +4,6 @@
     <string name="menuItem_overflow2">New Note</string>
     <string name="textView_listItem_title">Title</string>
     <string name="textView_listItem_lastEdited">Last Edited</string>
+    <string name="note_title_filler">NoteTitle</string>
+    <string name="date_text_filler">hh:mm dd-mm-yy</string>
 </resources>

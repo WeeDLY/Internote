@@ -1,8 +1,12 @@
 package no.hiof.internote.internote;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,15 +55,32 @@ public class NoteTextActivity extends AppCompatActivity {
         }
         else{
             noteDetailed = new NoteDetailed("New note", "", System.currentTimeMillis());
-            FillFields();
+            fillFields();
         }
-
     }
 
-    private void FillFields(){
+    @Override
+    protected void onDestroy() {
+        saveDocument(this);
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    // Fills all the text fields in the layout
+    private void fillFields(){
         textContent.setText(noteDetailed.getContent());
 
-        textLastEdited.setText(new Date(noteDetailed.getCreationDate() * 1000).toString());
+        textLastEdited.setText(new SimpleDateFormat("HH:mm dd-MM-yyyy").format(new Date(noteDetailed.getLastEdited())));
 
         TextView textTitle = findViewById(R.id.textTitle);
         textTitle.setText(noteDetailed.getTitle());
@@ -73,7 +94,7 @@ public class NoteTextActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
-                FillFields();
+                fillFields();
             }
 
             @Override
@@ -83,27 +104,11 @@ public class NoteTextActivity extends AppCompatActivity {
         });
     }
 
-    /*
-        Button: Takes you back to MainActivity
-     */
-    public void btnMainMenu(View view) {
-        MoveToMain();
-    }
-
-    // Moves you to MainMenu
-    private void MoveToMain(){
-        Intent intentMain = new Intent(this, MainActivity.class);
-        intentMain.putExtra(Settings.FIREBASEUSER_INTENT, user);
-        startActivity(intentMain);
-    }
-
-    /*
-        Button: Saves your current noteDetailed to firebase, also takes you back to MainActivity afterwards
-     */
-    public void btnSave(View view) {
+    // Saves the current document and moves user to MainActivity
+    private void saveDocument(Context context){
         // TODO: Have to save it locally. Not logged in as a user
         if(user == null){
-            Toast.makeText(view.getContext(), "TODO: Save locally", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "TODO: Save locally", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -111,7 +116,6 @@ public class NoteTextActivity extends AppCompatActivity {
         noteDetailed.setTitle(textTitle.getText().toString());
         noteDetailed.setContent(textContent.getText().toString());
         noteDetailed.setLastEdited(System.currentTimeMillis());
-
 
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
         // Update NoteDetailed to firebase
@@ -141,7 +145,6 @@ public class NoteTextActivity extends AppCompatActivity {
         }
 
         // Display that it was saved and auto-moves user to MainActivity
-        Toast.makeText(view.getContext(), "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
-        MoveToMain();
+        Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
     }
 };

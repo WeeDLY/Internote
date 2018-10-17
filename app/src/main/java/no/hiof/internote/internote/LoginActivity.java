@@ -37,19 +37,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /*
-        Check if user has internet connection
-     */
+    // Check if user has internet connection
     private boolean hasNetworkConnection(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    /*
-        Sends user directly to MainActivity
-     */
-    public void GoToMain(){
+    // Sends user directly to MainActivity
+    public void goToMain(){
         Intent intentMain = new Intent(this, MainActivity.class);
         intentMain.putExtra(Settings.FIREBASEUSER_INTENT, firebaseUser);
         startActivity(intentMain);
@@ -69,9 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             firebaseAuth.removeAuthStateListener(firebaseAuthStateListener);
     }
 
-    /*
-        creates a authentication listener that prompts the user to log in
-     */
+    // Creates a authentication listener that prompts the user to log in
     private void createAuthenticationListener() {
         Log.i("tag", "CreateAuthentication listener");
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -96,15 +90,13 @@ public class LoginActivity extends AppCompatActivity {
                 // User already signed in
                 else{
                     Toast.makeText(LoginActivity.this, "createAuthListener", Toast.LENGTH_SHORT).show();
-                    GoToMain();
+                    goToMain();
                 }
             }
         };
     }
 
-    /*
-        Callback from createAuthenticationListener
-     */
+    // Callback from createAuthenticationListener
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -113,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 firebaseUser = firebaseAuth.getCurrentUser();
                 Toast.makeText(this, "Signed in as " + firebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
-                GoToMain();
+                goToMain();
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
                 finish();
