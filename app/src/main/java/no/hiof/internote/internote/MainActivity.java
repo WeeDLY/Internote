@@ -162,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent startLoginActivity = new Intent(this, LoginActivity.class);
                 startActivity(startLoginActivity);
                 break;
+            case R.id.menuItem_overflow2:
+                Intent startAboutUsActivity = new Intent(this, AboutUsActivity.class);
+                startActivity(startAboutUsActivity);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -18,7 +18,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            app:srcCompat="@mipmap/ic_launcher"
+            android:contentDescription="@string/imageView_listItem_contentDescription" />
 
         <TextView
             android:id="@+id/textView_listItem_title"
