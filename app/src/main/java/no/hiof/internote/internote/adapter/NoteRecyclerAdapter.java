@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import no.hiof.internote.internote.NoteTextActivity;
@@ -72,6 +74,8 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
             this.title.setText(current.getTitle());
 
             String imageUrl = current.getImageUrl();
+            Date lastEditedDate = new Date(current.getLastEdited());
+            this.lastEdited.setText(new SimpleDateFormat("HH:mm dd-MM-yyyy").format(lastEditedDate));
 
             if (imageUrl != null && !imageUrl.equals("")) {
                 Glide.with(thumbnail.getContext())
