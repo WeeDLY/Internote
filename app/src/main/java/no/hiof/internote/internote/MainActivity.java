@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteTextActivity.class);
+                startNoteBasicActivity.putExtra(Settings.FIREBASEUSER_INTENT, user);
                 startActivity(startNoteBasicActivity);
             }
         });
@@ -138,11 +139,6 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 Intent startLoginActivity = new Intent(this, LoginActivity.class);
                 startActivity(startLoginActivity);
-                break;
-            case R.id.menuItem_overflow2:
-                Intent startNoteBasicActivity = new Intent(this, NoteTextActivity.class);
-                startNoteBasicActivity.putExtra(Settings.FIREBASEUSER_INTENT, user);
-                startActivity(startNoteBasicActivity);
                 break;
         }
         return super.onOptionsItemSelected(item);
