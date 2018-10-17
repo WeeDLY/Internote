@@ -46,7 +46,7 @@ public class NoteTextActivity extends AppCompatActivity {
         textLastEdited = findViewById(R.id.textLastEdited);
         textContent = findViewById(R.id.textContent);
 
-        user = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
+        user = getIntent().getParcelableExtra(Settings.INTENT_FIREBASEUSER);
         currentNoteDetailedKey = getIntent().getStringExtra(Settings.INTENT_NOTEDETAILED_KEY);
         currentNoteOverviewKey = getIntent().getStringExtra(Settings.INTENT_NOTEOVERVIEW_KEY);
 

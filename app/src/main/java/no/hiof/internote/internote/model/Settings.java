@@ -1,12 +1,12 @@
 package no.hiof.internote.internote.model;
 
 public class Settings {
-    public final static String FIREBASEUSER_INTENT = "firebaseUser";
     public final static String FIREBASE_NOTE_OVERVIEW = "NoteOverview";
     public final static String FIREBASE_NOTE_DETAILED = "NoteDetailed";
 
-    public final static String INTENT_NOTEDETAILED_KEY = "Note_DETAILED_KEY"; // NoteDetailedKey. Used to update NoteDetailed
-    public final static String INTENT_NOTEOVERVIEW_KEY = "NOTE_OVERVIEW_KEY"; // NoteOverviewKey. Used to update "lastEdited"
+    public final static String INTENT_FIREBASEUSER = "INTENT_FIREBASEUSER";
+    public final static String INTENT_NOTEDETAILED_KEY = "INTENT_NOTE_DETAILED"; // NoteDetailedKey. Used to update NoteDetailed
+    public final static String INTENT_NOTEOVERVIEW_KEY = "INTENT_NOTE_OVERVIEW"; // NoteOverviewKey. Used to update "lastEdited"
 
     private int fontSize;
     private String fontFamily;

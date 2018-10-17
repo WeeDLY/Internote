@@ -28,7 +28,7 @@ public class NoteImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_image);
 
-        user = getIntent().getParcelableExtra(Settings.FIREBASEUSER_INTENT);
+        user = getIntent().getParcelableExtra(Settings.INTENT_FIREBASEUSER);
         if(user != null){
             TextView textTitle = findViewById(R.id.textTitle);
             textTitle.setText(user.getUid());
@@ -46,7 +46,7 @@ public class NoteImageActivity extends AppCompatActivity {
     */
     public void btnMainMenu(View view) {
         Intent intentMain = new Intent(view.getContext(), MainActivity.class);
-        intentMain.putExtra(Settings.FIREBASEUSER_INTENT, user);
+        intentMain.putExtra(Settings.INTENT_FIREBASEUSER, user);
         startActivity(intentMain);
     }
 
