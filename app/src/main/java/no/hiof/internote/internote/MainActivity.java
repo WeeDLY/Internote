@@ -3,6 +3,7 @@ package no.hiof.internote.internote;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +33,7 @@ import no.hiof.internote.internote.model.Settings;
 public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
     private ArrayList<NoteOverview> notes = new ArrayList<>(); // List of users notes
+    private ArrayList<String> notesKey = new ArrayList<>(); // List of note key
     private RecyclerView recyclerView;
     private NoteRecyclerAdapter noteRecyclerAdapter;
 
@@ -61,15 +64,17 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onStart() {
-        // Clear recycleview list
-        noteRecyclerAdapter.notifyItemRangeRemoved(0, notes.size());
-        notes.clear();
         super.onStart();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
     /*
-        Sets up RecyclerView
-     */
+            Sets up RecyclerView
+         */
     private void setUpRecyclerView(){
         recyclerView = findViewById(R.id.recyclerView);
         noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
@@ -124,21 +129,48 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
         DatabaseReference documentsReference = databaseReference.getReference();
         documentsReference = documentsReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_OVERVIEW);
-        documentsReference.addValueEventListener(new ValueEventListener() {
+        documentsReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snap : dataSnapshot.getChildren()){
-                    NoteOverview noteOverview = snap.getValue(NoteOverview.class);
-                    noteOverview.setKey(snap.getKey());
-                    if(!notes.contains(noteOverview)){
-                        notes.add(noteOverview);
-                        noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
-                    }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
+                noteOverview.setKey(dataSnapshot.getKey());
+                if (!notes.contains(noteOverview)) {
+                    notes.add(noteOverview);
+                    notesKey.add(noteOverview.getKey());
+                    noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
                 }
             }
 
             @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
+                noteOverview.setKey(dataSnapshot.getKey());
+
+                int position = notesKey.indexOf(noteOverview.getKey());
+                notes.set(position, noteOverview);
+                noteRecyclerAdapter.notifyItemChanged(position);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                // TODO: Untested
+                NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
+                noteOverview.setKey(dataSnapshot.getKey());
+
+                int position = notesKey.indexOf(noteOverview.getKey());
+                notes.remove(position);
+                notesKey.remove(position);
+                noteRecyclerAdapter.notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("child.databaseError", databaseError.getMessage());
             }
         });
     }

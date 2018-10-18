@@ -13,4 +13,6 @@
     <string name="aboutUs_textView_contactInfo">Contact</string>
     <string name="aboutUs_textViev_jorgenInfo">Jørgen Sæter: jorgen.a.sater@hiof.no</string>
     <string name="aboutUs_textView_mariusInfo">Marius Rogndalen Karlsen: marius.r.karlsen@hiof.no</string>
+    <string name="delete_note">Delete note</string>
+    <string name="back_to_main">Back to Main</string>
 </resources>

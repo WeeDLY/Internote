@@ -11,11 +11,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +40,8 @@ public class NoteTextActivity extends AppCompatActivity {
 
     private String currentNoteDetailedKey;
     private String currentNoteOverviewKey;
+
+    private boolean deletingNote = false; // TODO: Has to be a better way, than this
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,24 +65,74 @@ public class NoteTextActivity extends AppCompatActivity {
         }
     }
 
+    /*
+        Creating the options overflow toolbar menu
+    */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_note, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /*
+        Handling the tap on the toolbar menu item
+    */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            // Deletes the note
+            case R.id.menuItem_overflow1:
+                // TODO: Add SnackBar for confirmation
+                // TODO: Clean up, so it's not ugly af code
+                if(user != null && currentNoteDetailedKey != null && currentNoteOverviewKey != null){
+                    // Stops onDestroy from trying to save the document
+                    deletingNote = true;
+
+                    DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
+
+                    DatabaseReference noteDetailedRef = userReference.child(Settings.FIREBASE_NOTE_DETAILED).child(currentNoteDetailedKey);
+                    noteDetailedRef.removeValue();
+
+                    DatabaseReference noteOverviewRef = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
+                    noteOverviewRef.removeValue();
+
+                    // Note is deleted, go to MainActivity
+                    goToMain();
+                }
+                break;
+            // Goes back to MainActivity
+            case R.id.menuItem_overflow2:
+                goToMain();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*
+        Takes user to MainActivity
+     */
+    private void goToMain(){
+        Intent intentMain = new Intent(this, MainActivity.class);
+        intentMain.putExtra(Settings.INTENT_FIREBASEUSER, user);
+        startActivity(intentMain);
+    }
+
+    /*
+        onDestroy method
+        Saves the document, unless deletingNote = true
+     */
     @Override
     protected void onDestroy() {
-        saveDocument(this);
+        if(!deletingNote)
+            saveDocument(this);
 
         super.onDestroy();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    // Fills all the text fields in the layout
+    /*
+        Fills all the text fields in the layout
+     */
     private void fillFields(){
         textContent.setText(noteDetailed.getContent());
 
@@ -86,15 +142,20 @@ public class NoteTextActivity extends AppCompatActivity {
         textTitle.setText(noteDetailed.getTitle());
     }
 
-    // Retrieves document information from firebase
+    /*
+        Retrieves document information from firebase
+     */
     private void retrieveDocument(String documentId){
         FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
         DatabaseReference documentReference = databaseReference.getReference();
         documentReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
-                fillFields();
+                // TODO: has to be a better way, than using boolean deletingNote
+                if(!deletingNote){
+                    noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
+                    fillFields();
+                }
             }
 
             @Override
@@ -104,7 +165,9 @@ public class NoteTextActivity extends AppCompatActivity {
         });
     }
 
-    // Saves the current document and moves user to MainActivity
+    /*
+        Saves the current document and moves user to MainActivity
+     */
     private void saveDocument(Context context){
         // TODO: Have to save it locally. Not logged in as a user
         if(user == null){
@@ -147,4 +210,4 @@ public class NoteTextActivity extends AppCompatActivity {
         // Display that it was saved and auto-moves user to MainActivity
         Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
     }
-};
+}
