@@ -11,9 +11,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -62,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
-
-        user = getIntent().getParcelableExtra(Settings.INTENT_FIREBASEUSER);
+        user = FirebaseAuth.getInstance().getCurrentUser();
         // user is logged in
         if(user != null){
             Toast.makeText(this, "user: " + user.getUid(), Toast.LENGTH_LONG).show();
@@ -112,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 NoteOverview note = notes.get(position);
 
                 Intent intent = new Intent(MainActivity.this, NoteTextActivity.class);
-                intent.putExtra(Settings.INTENT_FIREBASEUSER, user);
                 intent.putExtra(Settings.INTENT_NOTEDETAILED_KEY, note.getUid());
                 intent.putExtra(Settings.INTENT_NOTEOVERVIEW_KEY, note.getKey());
                 Log.d("recyclerView", note.getUid());
@@ -136,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteImageActivity.class);
-                startNoteBasicActivity.putExtra(Settings.INTENT_FIREBASEUSER, user);
                 startActivity(startNoteBasicActivity);
             }
         });
@@ -145,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteTextActivity.class);
-                startNoteBasicActivity.putExtra(Settings.INTENT_FIREBASEUSER, user);
                 startActivity(startNoteBasicActivity);
             }
         });

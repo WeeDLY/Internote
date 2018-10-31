@@ -13,7 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import no.hiof.internote.internote.AboutUsActivity;
+import no.hiof.internote.internote.LoginActivity;
 import no.hiof.internote.internote.R;
 import no.hiof.internote.internote.SettingsActivity;
 
@@ -54,7 +57,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationView
                 startActivity(intentSettings);
                 break;
             case R.id.nav_logout:
-                // Make FireBaseUser public static in model.Settings?
+                FirebaseAuth.getInstance().signOut();
+                Intent startLoginActivity = new Intent(getContext(), LoginActivity.class);
+                startActivity(startLoginActivity);
                 break;
             case R.id.nav_about_us:
                 Intent intentAboutUs = new Intent(getContext(), AboutUsActivity.class);

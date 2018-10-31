@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,7 +52,7 @@ public class NoteImageActivity extends AppCompatActivity {
         textLastEdited = findViewById(R.id.textLastEdited);
         textContent = findViewById(R.id.textContent);
 
-        user = getIntent().getParcelableExtra(Settings.INTENT_FIREBASEUSER);
+        user = FirebaseAuth.getInstance().getCurrentUser();
         currentNoteDetailedKey = getIntent().getStringExtra(Settings.INTENT_NOTEDETAILED_KEY);
         currentNoteOverviewKey = getIntent().getStringExtra(Settings.INTENT_NOTEOVERVIEW_KEY);
 
@@ -113,7 +114,6 @@ public class NoteImageActivity extends AppCompatActivity {
      */
     private void goToMain(){
         Intent intentMain = new Intent(this, MainActivity.class);
-        intentMain.putExtra(Settings.INTENT_FIREBASEUSER, user);
         startActivity(intentMain);
     }
 

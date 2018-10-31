@@ -52,7 +52,7 @@ public class NoteTextActivity extends AppCompatActivity {
         textLastEdited = findViewById(R.id.textLastEdited);
         textContent = findViewById(R.id.textContent);
 
-        user = getIntent().getParcelableExtra(Settings.INTENT_FIREBASEUSER);
+        user = FirebaseAuth.getInstance().getCurrentUser();
         currentNoteDetailedKey = getIntent().getStringExtra(Settings.INTENT_NOTEDETAILED_KEY);
         currentNoteOverviewKey = getIntent().getStringExtra(Settings.INTENT_NOTEOVERVIEW_KEY);
 
@@ -114,7 +114,6 @@ public class NoteTextActivity extends AppCompatActivity {
      */
     private void goToMain(){
         Intent intentMain = new Intent(this, MainActivity.class);
-        intentMain.putExtra(Settings.INTENT_FIREBASEUSER, user);
         startActivity(intentMain);
     }
 

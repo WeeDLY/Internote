@@ -1,5 +1,5 @@
 TODO
-1. NavigationDrawer with settings/AboutUs, etc
+1. NavigationDrawer with settings/AboutUs, etc | FINISHED (background image?)
 2. Load settings and use it
     This includes Light/Dark theme
        Font size, etc, etc.
