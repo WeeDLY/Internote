@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
+        // Set Theme
+        setTheme(R.style.AppThemeTwo);
+
         TextView toolbarTextUser = findViewById(R.id.toolbarTextUser);
         user = FirebaseAuth.getInstance().getCurrentUser();
         // user is logged in
@@ -91,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
     private void setUpRecyclerView(){
         recyclerView = findViewById(R.id.recyclerView);
         noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
-
         noteRecyclerAdapter.setOnItemClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {

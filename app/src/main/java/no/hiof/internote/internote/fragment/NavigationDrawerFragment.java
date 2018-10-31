@@ -1,5 +1,6 @@
 package no.hiof.internote.internote.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,19 +28,13 @@ public class NavigationDrawerFragment extends Fragment implements NavigationView
     private NavigationView navigationView;
 
     public NavigationDrawerFragment(){
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_navigation_drawer, container);
-
-        navigationView = view.findViewById(R.id.navigationView);
-
-        navigationView.setNavigationItemSelectedListener(this);
-
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppThemeTwo);
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+        return localInflater.inflate(R.layout.fragment_navigation_drawer, container, false);
     }
 
     public void setUpDrawer(DrawerLayout setDrawerLayout, Toolbar toolbar) {
