@@ -6,12 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -23,6 +25,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -59,32 +63,20 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
+        TextView toolbarTextUser = findViewById(R.id.toolbarTextUser);
         user = FirebaseAuth.getInstance().getCurrentUser();
         // user is logged in
         if(user != null){
-            Toast.makeText(this, "user: " + user.getUid(), Toast.LENGTH_LONG).show();
+            toolbarTextUser.setText(user.getEmail());
             retrieveUserDocuments(user);
         }
         else{
-            Toast.makeText(this, "No user logged in", Toast.LENGTH_LONG).show();
+            toolbarTextUser.setText("(Offline)");
         }
 
         setUpFloatingActionButton();
         setUpRecyclerView();
         setUpNavigationDrawer();
-    }
-
-    /*
-        onStart lifecycle
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     private void setUpNavigationDrawer() {
@@ -94,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-            Sets up RecyclerView
-         */
+        Sets up RecyclerView
+     */
     private void setUpRecyclerView(){
         recyclerView = findViewById(R.id.recyclerView);
         noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
@@ -110,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, NoteTextActivity.class);
                 intent.putExtra(Settings.INTENT_NOTEDETAILED_KEY, note.getUid());
                 intent.putExtra(Settings.INTENT_NOTEOVERVIEW_KEY, note.getKey());
-                Log.d("recyclerView", note.getUid());
                 startActivity(intent);
             }
         });
@@ -156,11 +147,9 @@ public class MainActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
-                if (!notes.contains(noteOverview)) {
-                    notes.add(noteOverview);
-                    notesKey.add(noteOverview.getKey());
-                    noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
-                }
+                notes.add(noteOverview);
+                notesKey.add(noteOverview.getKey());
+                noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
             }
 
             @Override

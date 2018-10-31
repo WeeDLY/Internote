@@ -21,7 +21,19 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?attr/colorPrimary" />
+                android:background="?attr/colorPrimary">
+
+                <TextView
+                    android:id="@+id/toolbarTextUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:gravity="end"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textSize="18sp" />
+            </android.support.v7.widget.Toolbar>
+
         </android.support.design.widget.AppBarLayout>
 
         <android.support.constraint.ConstraintLayout
