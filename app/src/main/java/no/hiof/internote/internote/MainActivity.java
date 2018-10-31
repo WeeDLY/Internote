@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +25,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -52,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+
 
         user = getIntent().getParcelableExtra(Settings.INTENT_FIREBASEUSER);
         // user is logged in
@@ -65,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
         setUpFloatingActionButton();
         setUpRecyclerView();
+
+        setUpNavigationDrawer();
     }
 
     /*
@@ -82,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpNavigationDrawer() {
         navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentNavigationDrawer);
-        DrawerLayout drawerLayout = findViewById(R.id.fragmentNavigationDrawer);
-
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         navigationDrawerFragment.setUpDrawer(drawerLayout, toolbar);
     }
 
@@ -188,34 +194,5 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("child.databaseError", databaseError.getMessage());
             }
         });
-    }
-
-    /*
-        Creating the options overflow toolbar menu
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /*
-        Handling the tap on the toolbar menu item
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.menuItem_overflow1:
-                FirebaseAuth.getInstance().signOut();
-                Intent startLoginActivity = new Intent(this, LoginActivity.class);
-                startActivity(startLoginActivity);
-                break;
-            case R.id.menuItem_overflow2:
-                Intent startAboutUsActivity = new Intent(this, AboutUsActivity.class);
-                startActivity(startAboutUsActivity);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
