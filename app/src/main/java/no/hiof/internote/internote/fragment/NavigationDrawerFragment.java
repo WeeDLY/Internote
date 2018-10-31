@@ -45,6 +45,14 @@ public class NavigationDrawerFragment extends Fragment implements NavigationView
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch(menuItem.getItemId()){
+            case R.id.nav_settings:
+                break;
+            case R.id.nav_logout:
+                break;
+            case R.id.nav_about_us:
+                break;
+        }
         return false;
     }
 }
