@@ -5,6 +5,7 @@
     android:id="@+id/nav_header_layout"
     android:layout_width="match_parent"
     android:layout_height="160dp"
+    android:background="@drawable/navigation_drawer_header_background"
     tools:layout_editor_absoluteY="81dp">
 
     <TextView
@@ -15,27 +16,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="@string/app_name"
+        android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textStudent1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/aboutUs_textView_mariusInfo"
-        app:layout_constraintBottom_toTopOf="@+id/textStudent2"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textStudent2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/aboutUs_textView_jorgenInfo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
