@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -45,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
     private NavigationDrawerFragment navigationDrawerFragment;
     private Toolbar toolbar;
 
+    // For floating action button
+    private FloatingActionMenu floatingActionMenu;
+    private FloatingActionButton newImagenote, newTextnote;
+
     /*
         onCreate lifecycle
      */
@@ -68,9 +73,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "No user logged in", Toast.LENGTH_LONG).show();
         }
 
-        //setUpFloatingActionButton();
+        setUpFloatingActionButton();
         setUpRecyclerView();
-
         setUpNavigationDrawer();
     }
 
@@ -122,18 +126,22 @@ public class MainActivity extends AppCompatActivity {
     /*
         Sets up the floating action button
      */
-    /*public void setUpFloatingActionButton() {
-        FloatingActionButton fab_textnote = findViewById(R.id.fab_newTextnote);
-        FloatingActionButton fab_imagenote = findViewById(R.id.fab_newImagenote);
+    public void setUpFloatingActionButton() {
 
-        fab_imagenote.setOnClickListener(new View.OnClickListener(){
+        floatingActionMenu = findViewById(R.id.fab);
+        newImagenote = findViewById(R.id.fab_newImagenote);
+        newTextnote = findViewById(R.id.fab_newTextnote);
+
+        newImagenote.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "TODO: Overflow menu", Toast.LENGTH_LONG).show();
+                Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteImageActivity.class);
+                startNoteBasicActivity.putExtra(Settings.INTENT_FIREBASEUSER, user);
+                startActivity(startNoteBasicActivity);
             }
         });
 
-        fab_textnote.setOnClickListener(new View.OnClickListener() {
+        newTextnote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteTextActivity.class);
@@ -141,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startNoteBasicActivity);
             }
         });
-    }*/
+    }
 
     /*
         Retrieves documents that the user has
