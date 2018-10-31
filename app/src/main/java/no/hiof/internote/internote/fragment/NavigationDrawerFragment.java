@@ -1,5 +1,6 @@
 package no.hiof.internote.internote.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,7 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import no.hiof.internote.internote.AboutUsActivity;
 import no.hiof.internote.internote.R;
+import no.hiof.internote.internote.SettingsActivity;
 
 public class NavigationDrawerFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
@@ -47,10 +50,15 @@ public class NavigationDrawerFragment extends Fragment implements NavigationView
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()){
             case R.id.nav_settings:
+                Intent intentSettings = new Intent(getContext(), SettingsActivity.class);
+                startActivity(intentSettings);
                 break;
             case R.id.nav_logout:
+                // Make FireBaseUser public static in model.Settings?
                 break;
             case R.id.nav_about_us:
+                Intent intentAboutUs = new Intent(getContext(), AboutUsActivity.class);
+                startActivity(intentAboutUs);
                 break;
         }
         return false;

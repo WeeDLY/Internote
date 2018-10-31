@@ -1,14 +1,13 @@
 <resources>
     <string name="app_name">Internote</string>
-    <string name="menuItem_overflow1">Log Out</string>
-    <string name="menuItem_overflow2">About Us</string>
+    <string name="logout">Log Out</string>
+    <string name="about_us">About Us</string>
     <string name="textView_listItem_title">Title</string>
     <string name="textView_listItem_lastEdited">Last Edited</string>
     <string name="note_title_filler">Note title</string>
     <string name="date_text_filler">hh:mm dd-mm-yy</string>
     <string name="note_text_content_filler">Write your notes here :)</string>
     <string name="imageView_listItem_contentDescription">Thumbnail for image notes</string>
-    <string name="aboutUs_textView_title">Internote</string>
     <string name="aboutUs_textView_applicationInfo">This application is made as a student project in the course Android Programming at Østfold University College.</string>
     <string name="aboutUs_textView_contactInfo">Contact</string>
     <string name="aboutUs_textView_jorgenInfo">Jørgen Sæter: jorgen.a.sater@hiof.no</string>
@@ -17,4 +16,6 @@
     <string name="back_to_main">Back to Main</string>
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
+    <string name="navigation_drawer_settings">Settings</string>
+    <string name="navigation_drawer_logout">logout</string>
 </resources>

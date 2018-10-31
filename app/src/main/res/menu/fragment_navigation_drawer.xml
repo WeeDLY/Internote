@@ -5,17 +5,17 @@
         <menu>
             <item
                 android:id="@+id/nav_settings"
-                android:title="Settings" />
+                android:title="@string/navigation_drawer_settings" />
             <item
                 android:id="@+id/nav_logout"
-                android:title="feedback" />
+                android:title="@string/logout" />
         </menu>
     </item>
     <item android:title="Information">
         <menu>
             <item
                 android:id="@+id/nav_about_us"
-                android:title="feedback" />
+                android:title="@string/about_us" />
         </menu>
     </item>
 
