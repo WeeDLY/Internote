@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "No user logged in", Toast.LENGTH_LONG).show();
         }
 
-        setUpFloatingActionButton();
+        //setUpFloatingActionButton();
         setUpRecyclerView();
 
         setUpNavigationDrawer();
@@ -122,18 +122,18 @@ public class MainActivity extends AppCompatActivity {
     /*
         Sets up the floating action button
      */
-    public void setUpFloatingActionButton() {
-        FloatingActionButton fab = findViewById(R.id.fab);
+    /*public void setUpFloatingActionButton() {
+        FloatingActionButton fab_textnote = findViewById(R.id.fab_newTextnote);
+        FloatingActionButton fab_imagenote = findViewById(R.id.fab_newImagenote);
 
-        fab.setOnLongClickListener(new View.OnLongClickListener(){
+        fab_imagenote.setOnClickListener(new View.OnClickListener(){
             @Override
-            public boolean onLongClick(View view) {
+            public void onClick(View view) {
                 Toast.makeText(view.getContext(), "TODO: Overflow menu", Toast.LENGTH_LONG).show();
-                return true;
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab_textnote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteTextActivity.class);
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startNoteBasicActivity);
             }
         });
-    }
+    }*/
 
     /*
         Retrieves documents that the user has

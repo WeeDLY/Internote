@@ -39,17 +39,35 @@
 
             </android.support.v7.widget.RecyclerView>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
+            <com.github.clans.fab.FloatingActionMenu
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
+                android:id="@+id/fab"
+                android:layout_margin="16dp"
+                app:menu_backgroundColor="@color/fui_transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_action_add" />
+                app:menu_showShadow="true"
+                app:menu_fab_label=""
+                app:menu_openDirection="up">
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fab_label="New Textnote"
+                    app:fab_size="mini"
+                    android:id="@+id/fab_newTextnote"
+                    android:src="@drawable/fab_textnote_icon"/>
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fab_label="New Imagenote"
+                    app:fab_size="mini"
+                    android:id="@+id/fab_newImagenote"
+                    android:src="@drawable/fab_imagenote_icon"/>
+
+            </com.github.clans.fab.FloatingActionMenu>
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline5"
