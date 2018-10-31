@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import no.hiof.internote.internote.adapter.NoteRecyclerAdapter;
+import no.hiof.internote.internote.fragment.NavigationDrawerFragment;
 import no.hiof.internote.internote.model.NoteOverview;
 import no.hiof.internote.internote.model.Settings;
 
@@ -34,8 +37,13 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
     private ArrayList<NoteOverview> notes = new ArrayList<>(); // List of users notes
     private ArrayList<String> notesKey = new ArrayList<>(); // List of note key
+
     private RecyclerView recyclerView;
     private NoteRecyclerAdapter noteRecyclerAdapter;
+
+    // For navigation Drawer
+    private NavigationDrawerFragment navigationDrawerFragment;
+    private Toolbar toolbar;
 
     /*
         onCreate lifecycle
@@ -70,6 +78,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    private void setUpNavigationDrawer() {
+        navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentNavigationDrawer);
+        DrawerLayout drawerLayout = findViewById(R.id.fragmentNavigationDrawer);
+
+        navigationDrawerFragment.setUpDrawer(drawerLayout, toolbar);
     }
 
     /*

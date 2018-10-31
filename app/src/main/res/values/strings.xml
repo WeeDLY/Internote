@@ -15,4 +15,6 @@
     <string name="aboutUs_textView_mariusInfo">Marius Rogndalen Karlsen: marius.r.karlsen@hiof.no</string>
     <string name="delete_note">Delete note</string>
     <string name="back_to_main">Back to Main</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
 </resources>
