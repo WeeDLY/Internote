@@ -45,8 +45,7 @@ public class NoteTextActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppThemeTwo);
-        //setTheme(R.style.AppTheme);
+        setTheme(Settings.getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_text);
 

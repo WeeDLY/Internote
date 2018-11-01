@@ -45,6 +45,7 @@ public class NoteImageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Settings.getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_text);
 

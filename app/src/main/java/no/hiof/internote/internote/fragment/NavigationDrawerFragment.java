@@ -21,6 +21,7 @@ import no.hiof.internote.internote.AboutUsActivity;
 import no.hiof.internote.internote.LoginActivity;
 import no.hiof.internote.internote.R;
 import no.hiof.internote.internote.SettingsActivity;
+import no.hiof.internote.internote.model.Settings;
 
 public class NavigationDrawerFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
@@ -32,7 +33,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationView
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppThemeTwo);
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), Settings.getTheme());
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         return localInflater.inflate(R.layout.fragment_navigation_drawer, container, false);
     }

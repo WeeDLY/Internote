@@ -56,15 +56,16 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(Settings.getTheme(true));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
+        //toolbar.setPopupTheme(R.style.AppThemeTwo);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
-        // Set Theme
-        setTheme(R.style.AppThemeTwo);
 
         TextView toolbarTextUser = findViewById(R.id.toolbarTextUser);
         user = FirebaseAuth.getInstance().getCurrentUser();
