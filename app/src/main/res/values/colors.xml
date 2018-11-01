@@ -7,10 +7,10 @@
     <color name="colorTextBackground">#777777</color>
     <color name="colorTextForeground">#000000</color>
 
-    <color name="colorPrimaryThemeDark">#393E41</color>
-    <color name="colorPrimaryDarkThemeDark">#D3D0CB</color>
-    <color name="colorAccentThemeDark">#E2C044</color>
-    <color name="colorBackgroundThemeDark">#1E2019</color>
-    <color name="colorTextBackgroundThemeDark">#E2C044</color>
-    <color name="colorTextForegroundThemeDark">#587B7F</color>
+    <color name="colorPrimaryThemeDark">#01161E</color>
+    <color name="colorPrimaryDarkThemeDark">#124559</color>
+    <color name="colorAccentThemeDark">#598392</color>
+    <color name="colorBackgroundThemeDark">#01161E</color>
+    <color name="colorTextBackgroundThemeDark">#124559</color>
+    <color name="colorTextForegroundThemeDark">#AEC3B0</color>
 </resources>

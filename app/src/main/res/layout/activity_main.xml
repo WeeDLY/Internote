@@ -30,8 +30,7 @@
                     android:gravity="end"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
-                    android:textSize="18sp"
-                    android:background="#00000000"/>
+                    android:textSize="18sp"  />
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>

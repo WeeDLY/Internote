@@ -21,7 +21,6 @@ import no.hiof.internote.internote.AboutUsActivity;
 import no.hiof.internote.internote.LoginActivity;
 import no.hiof.internote.internote.R;
 import no.hiof.internote.internote.SettingsActivity;
-import no.hiof.internote.internote.model.Settings;
 
 public class NavigationDrawerFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
