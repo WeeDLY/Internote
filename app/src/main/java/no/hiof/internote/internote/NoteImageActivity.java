@@ -76,15 +76,6 @@ public class NoteImageActivity extends AppCompatActivity {
         }
 
         imageView_noteImage = findViewById(R.id.imageView_image);
-
-        /*// Setting the saved picture in the image view if there is any
-        if (savedInstanceState != null) {
-            Bitmap tmp = savedInstanceState.getParcelable(IMAGE_KEY);
-            if (tmp != null) {
-                drawable = new BitmapDrawable(getResources(), tmp);
-                imageView_noteImage.setImageDrawable(drawable);
-            }
-        }*/
     }
 
     /*
@@ -104,7 +95,7 @@ public class NoteImageActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             // Deletes the note
-            case R.id.menuItem_overflow1:
+            case R.id.menuDeleteNote:
                 // TODO: Add SnackBar for confirmation
                 // TODO: Clean up, so it's not ugly af code
                 if(user != null && currentNoteDetailedKey != null && currentNoteOverviewKey != null){
@@ -118,13 +109,11 @@ public class NoteImageActivity extends AppCompatActivity {
 
                     DatabaseReference noteOverviewRef = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
                     noteOverviewRef.removeValue();
-
-                    // Note is deleted, go to MainActivity
-                    goToMain();
                 }
+                goToMain();
                 break;
             // Goes back to MainActivity
-            case R.id.menuItem_overflow2:
+            case R.id.menuBackToMain:
                 goToMain();
                 break;
         }
@@ -161,18 +150,6 @@ public class NoteImageActivity extends AppCompatActivity {
     }
 
     /*
-        onDestroy method
-        Saves the document, unless deletingNote = true
-     */
-    @Override
-    protected void onDestroy() {
-        if(!deletingNote)
-            saveDocument(this);
-
-        super.onDestroy();
-    }
-
-    /*
         Fills all the text fields in the layout
      */
     private void fillFields(){
@@ -193,32 +170,6 @@ public class NoteImageActivity extends AppCompatActivity {
             startActivityForResult(intentPic, REQUEST_IMAGE_CAPTURE);
         }
     }
-
-    /*// Replaces the current picture in the image section
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Setting the picture taken
-            Bundle extras = data.getExtras();
-            Bitmap picture = (Bitmap) extras.get("data");
-            imageView_noteImage.setImageBitmap(picture);
-
-            // converting the Bitmap to a BitmapDrawable
-            drawable = new BitmapDrawable(getResources(), picture);
-        } else {
-            Toast.makeText(this, "Couldn't get picture", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // Saving the picture
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (drawable != null) {
-            outState.putParcelable(IMAGE_KEY, drawable.getBitmap());
-        }
-    }*/
 
     /*
         Retrieves document information from firebase

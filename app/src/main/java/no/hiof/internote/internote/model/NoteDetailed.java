@@ -50,16 +50,38 @@ public class NoteDetailed extends Note{
     }
 
 
-    @Override
-    public String toString() {
-        return "Title: " + getTitle() + " creationDate: " + new Date(getCreationDate() * 1000).toString() + " content: " + getContent();
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Title: " + getTitle() + " creationDate: " + new Date(getCreationDate() * 1000).toString() + " content: " + getContent();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Compared to itself
+        if(obj == this) return true;
+
+        // Compare instance of class
+        if (!(obj instanceof NoteDetailed)) {
+            return false;
+        }
+
+        NoteDetailed o = (NoteDetailed)obj;
+
+        if(this.getTitle() == o.getTitle() &&
+                this.getContent() == o.getContent() &&
+                this.getImageUrl() == o.getImageUrl()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

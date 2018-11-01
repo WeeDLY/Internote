@@ -5,11 +5,11 @@ import java.util.Date;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +41,8 @@ public class NoteTextActivity extends AppCompatActivity {
     private String currentNoteDetailedKey;
     private String currentNoteOverviewKey;
 
-    private boolean deletingNote = false; // TODO: Has to be a better way, than this
+    private boolean deleteNote = false;
+    private boolean madeChanges = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,24 @@ public class NoteTextActivity extends AppCompatActivity {
     }
 
     /*
+        TextChanged event. Used for listening for changes in the document
+     */
+    private class TextChangedListener implements TextWatcher{
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            madeChanges = true;
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    }
+
+    /*
         Creating the options overflow toolbar menu
     */
     @Override
@@ -83,13 +102,9 @@ public class NoteTextActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             // Deletes the note
-            case R.id.menuItem_overflow1:
-                // TODO: Add SnackBar for confirmation
-                // TODO: Clean up, so it's not ugly af code
+            case R.id.menuDeleteNote:
+                deleteNote = true;
                 if(user != null && currentNoteDetailedKey != null && currentNoteOverviewKey != null){
-                    // Stops onDestroy from trying to save the document
-                    deletingNote = true;
-
                     DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
 
                     DatabaseReference noteDetailedRef = userReference.child(Settings.FIREBASE_NOTE_DETAILED).child(currentNoteDetailedKey);
@@ -97,13 +112,11 @@ public class NoteTextActivity extends AppCompatActivity {
 
                     DatabaseReference noteOverviewRef = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
                     noteOverviewRef.removeValue();
-
-                    // Note is deleted, go to MainActivity
                     goToMain();
                 }
                 break;
             // Goes back to MainActivity
-            case R.id.menuItem_overflow2:
+            case R.id.menuBackToMain:
                 goToMain();
                 break;
         }
@@ -119,15 +132,15 @@ public class NoteTextActivity extends AppCompatActivity {
     }
 
     /*
-        onDestroy method
-        Saves the document, unless deletingNote = true
+        Android lifecycle: onPause event
      */
     @Override
-    protected void onDestroy() {
-        if(!deletingNote)
+    protected void onPause() {
+        super.onPause();
+        if(madeChanges && !deleteNote){
+            Log.d("SaveDocument", "SAVED");
             saveDocument(this);
-
-        super.onDestroy();
+        }
     }
 
     /*
@@ -140,6 +153,11 @@ public class NoteTextActivity extends AppCompatActivity {
 
         TextView textTitle = findViewById(R.id.textTitle);
         textTitle.setText(noteDetailed.getTitle());
+
+
+        // Set events, so we can check if the user made changes to the document
+        this.textTitle.addTextChangedListener(new TextChangedListener());
+        textContent.addTextChangedListener(new TextChangedListener());
     }
 
     /*
@@ -151,11 +169,10 @@ public class NoteTextActivity extends AppCompatActivity {
         documentReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // TODO: has to be a better way, than using boolean deletingNote
-                if(!deletingNote){
-                    noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
-                    fillFields();
-                }
+                noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
+                if(noteDetailed == null)
+                    noteDetailed = new NoteDetailed("New note", "", System.currentTimeMillis());
+                fillFields();
             }
 
             @Override
@@ -169,12 +186,6 @@ public class NoteTextActivity extends AppCompatActivity {
         Saves the current document and moves user to MainActivity
      */
     private void saveDocument(Context context){
-        // TODO: Have to save it locally. Not logged in as a user
-        if(user == null){
-            Toast.makeText(context, "TODO: Save locally", Toast.LENGTH_LONG).show();
-            return;
-        }
-
         // Update current noteDetailed
         noteDetailed.setTitle(textTitle.getText().toString());
         noteDetailed.setContent(textContent.getText().toString());
@@ -209,5 +220,12 @@ public class NoteTextActivity extends AppCompatActivity {
 
         // Display that it was saved and auto-moves user to MainActivity
         Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+    }
+
+    /*
+        GoToMain Menu
+     */
+    public void btnBackOnClick(View view) {
+        goToMain();
     }
 }
