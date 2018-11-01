@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -135,6 +136,27 @@ public class NoteImageActivity extends AppCompatActivity {
     private void goToMain(){
         Intent intentMain = new Intent(this, MainActivity.class);
         startActivity(intentMain);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putString("detailedKey", currentNoteDetailedKey);
+        savedInstanceState.putString("overviewKey", currentNoteOverviewKey);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(!deletingNote)
+            saveDocument(this);
     }
 
     /*
