@@ -2,6 +2,10 @@ package no.hiof.internote.internote;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.PersistableBundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,13 +46,18 @@ public class NoteImageActivity extends AppCompatActivity {
     private String currentNoteDetailedKey;
     private String currentNoteOverviewKey;
 
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+    private ImageView imageView_noteImage;
+    public static final String IMAGE_KEY = "image_key";
+    private BitmapDrawable drawable;
+
     private boolean deletingNote = false; // TODO: Has to be a better way, than this
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(Settings.getTheme());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_text);
+        setContentView(R.layout.activity_note_image);
 
         textTitle = findViewById(R.id.textTitle);
         textLastEdited = findViewById(R.id.textLastEdited);
@@ -64,6 +74,17 @@ public class NoteImageActivity extends AppCompatActivity {
             noteDetailed = new NoteDetailed("New note", "", System.currentTimeMillis());
             fillFields();
         }
+
+        imageView_noteImage = findViewById(R.id.imageView_image);
+
+        /*// Setting the saved picture in the image view if there is any
+        if (savedInstanceState != null) {
+            Bitmap tmp = savedInstanceState.getParcelable(IMAGE_KEY);
+            if (tmp != null) {
+                drawable = new BitmapDrawable(getResources(), tmp);
+                imageView_noteImage.setImageDrawable(drawable);
+            }
+        }*/
     }
 
     /*
@@ -118,6 +139,27 @@ public class NoteImageActivity extends AppCompatActivity {
         startActivity(intentMain);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putString("detailedKey", currentNoteDetailedKey);
+        savedInstanceState.putString("overviewKey", currentNoteOverviewKey);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(!deletingNote)
+            saveDocument(this);
+    }
+
     /*
         onDestroy method
         Saves the document, unless deletingNote = true
@@ -141,6 +183,40 @@ public class NoteImageActivity extends AppCompatActivity {
         TextView textTitle = findViewById(R.id.textTitle);
         textTitle.setText(noteDetailed.getTitle());
     }
+
+    /*
+        Capture a picture for the note
+    */
+    public void getAnotherPicture (View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    /*// Replaces the current picture in the image section
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // Setting the picture taken
+            Bundle extras = data.getExtras();
+            Bitmap picture = (Bitmap) extras.get("data");
+            imageView_noteImage.setImageBitmap(picture);
+
+            // converting the Bitmap to a BitmapDrawable
+            drawable = new BitmapDrawable(getResources(), picture);
+        } else {
+            Toast.makeText(this, "Couldn't get picture", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Saving the picture
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (drawable != null) {
+            outState.putParcelable(IMAGE_KEY, drawable.getBitmap());
+        }
+    }*/
 
     /*
         Retrieves document information from firebase
