@@ -76,6 +76,15 @@ public class NoteImageActivity extends AppCompatActivity {
         }
 
         imageView_noteImage = findViewById(R.id.imageView_image);
+
+        // Setting the saved picture in the image view if there is any
+        if (savedInstanceState != null) {
+            Bitmap tmp = savedInstanceState.getParcelable(IMAGE_KEY);
+            if (tmp != null) {
+                drawable = new BitmapDrawable(getResources(), tmp);
+                imageView_noteImage.setImageDrawable(drawable);
+            }
+        }
     }
 
     /*
@@ -129,20 +138,6 @@ public class NoteImageActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-
-        savedInstanceState.putString("detailedKey", currentNoteDetailedKey);
-        savedInstanceState.putString("overviewKey", currentNoteOverviewKey);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         if(!deletingNote)
@@ -168,6 +163,32 @@ public class NoteImageActivity extends AppCompatActivity {
         Intent intentPic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intentPic.resolveActivity(getPackageManager()) != null){
             startActivityForResult(intentPic, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    // Replaces the current picture in the image section
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // Setting the picture taken
+            Bundle extras = data.getExtras();
+            Bitmap picture = (Bitmap) extras.get("data");
+            imageView_noteImage.setImageBitmap(picture);
+
+            // converting the Bitmap to a BitmapDrawable
+            drawable = new BitmapDrawable(getResources(), picture);
+        } else {
+            Toast.makeText(this, "Couldn't get picture", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Saving the picture
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (drawable != null) {
+            outState.putParcelable(IMAGE_KEY, drawable.getBitmap());
         }
     }
 
