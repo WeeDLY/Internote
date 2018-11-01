@@ -77,14 +77,14 @@ public class NoteImageActivity extends AppCompatActivity {
 
         imageView_noteImage = findViewById(R.id.imageView_image);
 
-        /*// Setting the saved picture in the image view if there is any
+        // Setting the saved picture in the image view if there is any
         if (savedInstanceState != null) {
             Bitmap tmp = savedInstanceState.getParcelable(IMAGE_KEY);
             if (tmp != null) {
                 drawable = new BitmapDrawable(getResources(), tmp);
                 imageView_noteImage.setImageDrawable(drawable);
             }
-        }*/
+        }
     }
 
     /*
@@ -140,36 +140,10 @@ public class NoteImageActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-
-        savedInstanceState.putString("detailedKey", currentNoteDetailedKey);
-        savedInstanceState.putString("overviewKey", currentNoteOverviewKey);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         if(!deletingNote)
             saveDocument(this);
-    }
-
-    /*
-        onDestroy method
-        Saves the document, unless deletingNote = true
-     */
-    @Override
-    protected void onDestroy() {
-        if(!deletingNote)
-            saveDocument(this);
-
-        super.onDestroy();
     }
 
     /*
@@ -194,7 +168,7 @@ public class NoteImageActivity extends AppCompatActivity {
         }
     }
 
-    /*// Replaces the current picture in the image section
+    // Replaces the current picture in the image section
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -218,7 +192,7 @@ public class NoteImageActivity extends AppCompatActivity {
         if (drawable != null) {
             outState.putParcelable(IMAGE_KEY, drawable.getBitmap());
         }
-    }*/
+    }
 
     /*
         Retrieves document information from firebase
