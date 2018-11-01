@@ -188,8 +188,10 @@ public class NoteImageActivity extends AppCompatActivity {
         Capture a picture for the note
     */
     public void getAnotherPicture (View view) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        Intent intentPic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(intentPic.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(intentPic, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
     /*// Replaces the current picture in the image section
