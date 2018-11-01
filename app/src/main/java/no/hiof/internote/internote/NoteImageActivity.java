@@ -1,14 +1,18 @@
 package no.hiof.internote.internote;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,12 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import no.hiof.internote.internote.model.NoteDetailed;
-import no.hiof.internote.internote.model.NoteOverview;
-import no.hiof.internote.internote.model.Settings;
+import no.hiof.internote.internote.model.*;
 
 public class NoteImageActivity extends AppCompatActivity {
     private FirebaseUser user;
@@ -46,12 +45,13 @@ public class NoteImageActivity extends AppCompatActivity {
     private String currentNoteDetailedKey;
     private String currentNoteOverviewKey;
 
+    private boolean deleteNote = false;
+    private boolean madeChanges = false;
+
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     private ImageView imageView_noteImage;
     public static final String IMAGE_KEY = "image_key";
     private BitmapDrawable drawable;
-
-    private boolean deletingNote = false; // TODO: Has to be a better way, than this
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,6 @@ public class NoteImageActivity extends AppCompatActivity {
         }
 
         imageView_noteImage = findViewById(R.id.imageView_image);
-
         // Setting the saved picture in the image view if there is any
         if (savedInstanceState != null) {
             Bitmap tmp = savedInstanceState.getParcelable(IMAGE_KEY);
@@ -85,75 +84,6 @@ public class NoteImageActivity extends AppCompatActivity {
                 imageView_noteImage.setImageDrawable(drawable);
             }
         }
-    }
-
-    /*
-        Creating the options overflow toolbar menu
-    */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_note, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /*
-        Handling the tap on the toolbar menu item
-    */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            // Deletes the note
-            case R.id.menuDeleteNote:
-                // TODO: Add SnackBar for confirmation
-                // TODO: Clean up, so it's not ugly af code
-                if(user != null && currentNoteDetailedKey != null && currentNoteOverviewKey != null){
-                    // Stops onDestroy from trying to save the document
-                    deletingNote = true;
-
-                    DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
-
-                    DatabaseReference noteDetailedRef = userReference.child(Settings.FIREBASE_NOTE_DETAILED).child(currentNoteDetailedKey);
-                    noteDetailedRef.removeValue();
-
-                    DatabaseReference noteOverviewRef = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
-                    noteOverviewRef.removeValue();
-                }
-                goToMain();
-                break;
-            // Goes back to MainActivity
-            case R.id.menuBackToMain:
-                goToMain();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /*
-        Takes user to MainActivity
-     */
-    private void goToMain(){
-        Intent intentMain = new Intent(this, MainActivity.class);
-        startActivity(intentMain);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(!deletingNote)
-            saveDocument(this);
-    }
-
-    /*
-        Fills all the text fields in the layout
-     */
-    private void fillFields(){
-        textContent.setText(noteDetailed.getContent());
-
-        textLastEdited.setText(new SimpleDateFormat("HH:mm dd-MM-yyyy").format(new Date(noteDetailed.getLastEdited())));
-
-        TextView textTitle = findViewById(R.id.textTitle);
-        textTitle.setText(noteDetailed.getTitle());
     }
 
     /*
@@ -193,6 +123,106 @@ public class NoteImageActivity extends AppCompatActivity {
     }
 
     /*
+        Button click event: btnBackToMain
+     */
+    public void btnBackToMainOnClick(View view) {
+        goToMain();
+    }
+
+    /*
+        TextChanged event. Used for listening for changes in the document
+     */
+    private class TextChangedListener implements TextWatcher{
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            madeChanges = true;
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    }
+
+    /*
+        Creating the options overflow toolbar menu
+    */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_note, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /*
+        Handling the tap on the toolbar menu item
+    */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            // Deletes the note
+            case R.id.menuDeleteNote:
+                deleteNote = true;
+                if(user != null && currentNoteDetailedKey != null && currentNoteOverviewKey != null){
+                    DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
+
+                    DatabaseReference noteDetailedRef = userReference.child(Settings.FIREBASE_NOTE_DETAILED).child(currentNoteDetailedKey);
+                    noteDetailedRef.removeValue();
+
+                    DatabaseReference noteOverviewRef = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
+                    noteOverviewRef.removeValue();
+                    goToMain();
+                }
+                break;
+            // Goes back to MainActivity
+            case R.id.menuBackToMain:
+                goToMain();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*
+        Takes user to MainActivity
+     */
+    private void goToMain(){
+        Intent intentMain = new Intent(this, MainActivity.class);
+        startActivity(intentMain);
+    }
+
+    /*
+        Android lifecycle: onPause event
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(madeChanges && !deleteNote){
+            Log.d("SaveDocument", "SAVED");
+            saveDocument(this);
+        }
+    }
+
+    /*
+        Fills all the text fields in the layout
+     */
+    private void fillFields(){
+        textContent.setText(noteDetailed.getContent());
+
+        textLastEdited.setText(new SimpleDateFormat("HH:mm dd-MM-yyyy").format(new Date(noteDetailed.getLastEdited())));
+
+        TextView textTitle = findViewById(R.id.textTitle);
+        textTitle.setText(noteDetailed.getTitle());
+
+
+        // Set events, so we can check if the user made changes to the document
+        this.textTitle.addTextChangedListener(new TextChangedListener());
+        textContent.addTextChangedListener(new TextChangedListener());
+    }
+
+    /*
         Retrieves document information from firebase
      */
     private void retrieveDocument(String documentId){
@@ -201,11 +231,10 @@ public class NoteImageActivity extends AppCompatActivity {
         documentReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // TODO: has to be a better way, than using boolean deletingNote
-                if(!deletingNote){
-                    noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
-                    fillFields();
-                }
+                noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
+                if(noteDetailed == null)
+                    noteDetailed = new NoteDetailed("New note", "", System.currentTimeMillis());
+                fillFields();
             }
 
             @Override
@@ -219,12 +248,6 @@ public class NoteImageActivity extends AppCompatActivity {
         Saves the current document and moves user to MainActivity
      */
     private void saveDocument(Context context){
-        // TODO: Have to save it locally. Not logged in as a user
-        if(user == null){
-            Toast.makeText(context, "TODO: Save locally", Toast.LENGTH_LONG).show();
-            return;
-        }
-
         // Update current noteDetailed
         noteDetailed.setTitle(textTitle.getText().toString());
         noteDetailed.setContent(textContent.getText().toString());
@@ -259,5 +282,12 @@ public class NoteImageActivity extends AppCompatActivity {
 
         // Display that it was saved and auto-moves user to MainActivity
         Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+    }
+
+    /*
+        GoToMain Menu
+     */
+    public void btnBackOnClick(View view) {
+        goToMain();
     }
 }
