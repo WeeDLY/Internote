@@ -1,12 +1,16 @@
 package no.hiof.internote.internote;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -49,9 +53,9 @@ public class NoteImageActivity extends AppCompatActivity {
     private boolean madeChanges = false;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Bitmap mImageBitmap;
     private ImageView imageView_noteImage;
-    public static final String IMAGE_KEY = "image_key";
-    private BitmapDrawable drawable;
+    private String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,40 +80,63 @@ public class NoteImageActivity extends AppCompatActivity {
         }
 
         imageView_noteImage = findViewById(R.id.imageView_image);
-        // Setting the saved picture in the image view if there is any
-        if (savedInstanceState != null) {
-            Bitmap tmp = savedInstanceState.getParcelable(IMAGE_KEY);
-            if (tmp != null) {
-                drawable = new BitmapDrawable(getResources(), tmp);
-                imageView_noteImage.setImageDrawable(drawable);
-            }
-        }
     }
 
     /*
         Capture a picture for the note
     */
     public void getAnotherPicture (View view) {
-        Intent intentPic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intentPic.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(intentPic, REQUEST_IMAGE_CAPTURE);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.i("IOEXception:", ex.getMessage());
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Log.d("FILE:", photoFile.getAbsolutePath());
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
+    }
+    /*
+        Create image from the camera
+    */
+    private File createImageFile() throws IOException {
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
     }
 
     // Replaces the current picture in the image section
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Setting the picture taken
-            Bundle extras = data.getExtras();
-            Bitmap picture = (Bitmap) extras.get("data");
-            imageView_noteImage.setImageBitmap(picture);
-
-            // converting the Bitmap to a BitmapDrawable
-            drawable = new BitmapDrawable(getResources(), picture);
-        } else {
-            Toast.makeText(this, "Couldn't get picture", Toast.LENGTH_SHORT).show();
+            try {
+                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                imageView_noteImage.setImageBitmap(mImageBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -117,9 +144,6 @@ public class NoteImageActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (drawable != null) {
-            outState.putParcelable(IMAGE_KEY, drawable.getBitmap());
-        }
     }
 
     /*
@@ -279,6 +303,9 @@ public class NoteImageActivity extends AppCompatActivity {
             noteOverviewReference.child("lastEdited").setValue(noteDetailed.getLastEdited());
             noteOverviewReference.child("title").setValue(noteDetailed.getTitle());
         }
+
+        // Upload image to firebase
+
 
         // Display that it was saved and auto-moves user to MainActivity
         Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
