@@ -33,9 +33,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationView
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), Settings.getTheme());
-        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-        return localInflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        View view = inflater.inflate(R.layout.fragment_navigation_drawer, container);
+        navigationView = view.findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        return view;
     }
 
     public void setUpDrawer(DrawerLayout setDrawerLayout, Toolbar toolbar) {

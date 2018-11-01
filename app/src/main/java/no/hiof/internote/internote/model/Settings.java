@@ -13,12 +13,11 @@ public class Settings {
 
     private int fontSize;
     private String fontFamily;
-    private static int appTheme;
+    private static int appTheme = 1;
 
     public Settings(){
         fontSize = 12;
         fontFamily = "Arial";
-        appTheme = 0;
     }
 
     public static int getTheme (boolean actionBar){
@@ -30,7 +29,6 @@ public class Settings {
                 case 1:
                     return R.style.DarkThemeNoActionBar;
             }
-
         }
         else{
             return getTheme();
@@ -61,5 +59,13 @@ public class Settings {
 
     public void setFontFamily(String fontFamily) {
         this.fontFamily = fontFamily;
+    }
+
+    public static void setAppTheme(int appTheme){
+        Settings.appTheme = appTheme;
+    }
+
+    public static int getAppTheme(){
+        return Settings.appTheme;
     }
 }
