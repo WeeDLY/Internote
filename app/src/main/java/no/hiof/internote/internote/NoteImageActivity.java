@@ -9,6 +9,7 @@ import java.util.Date;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -262,9 +263,16 @@ public class NoteImageActivity extends AppCompatActivity {
     private void downloadImage(String url){
         if(url == null)
             return;
+
+        final long ONE_MEGABYTE = 1024 * 1024;
         StorageReference storageImage = FirebaseStorage.getInstance().getReference(url);
-        Log.d("downloadImage: ", url);
-        Glide.with(this).load(storageImage).into(imageView_noteImage);
+        storageImage.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView_noteImage.setImageBitmap(bitmap);
+            }
+        });
     }
 
     /*
