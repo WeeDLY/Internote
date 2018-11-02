@@ -1,5 +1,6 @@
 package no.hiof.internote.internote;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -27,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +37,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import no.hiof.internote.internote.model.*;
 
@@ -45,6 +51,7 @@ public class NoteImageActivity extends AppCompatActivity {
     private EditText textContent;
 
     private DatabaseReference noteDetailedReference;
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
     private String currentNoteDetailedKey;
     private String currentNoteOverviewKey;
@@ -98,7 +105,7 @@ public class NoteImageActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Log.d("FILE:", photoFile.getAbsolutePath());
+                madeChanges = true;
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -272,6 +279,13 @@ public class NoteImageActivity extends AppCompatActivity {
         Saves the current document and moves user to MainActivity
      */
     private void saveDocument(Context context){
+        // Upload image(if image was taken)
+        String imagePath = uploadImage();
+        if(imagePath == null){
+            return;
+        }
+        noteDetailed.setImageUrl(imagePath);
+
         // Update current noteDetailed
         noteDetailed.setTitle(textTitle.getText().toString());
         noteDetailed.setContent(textContent.getText().toString());
@@ -304,11 +318,44 @@ public class NoteImageActivity extends AppCompatActivity {
             noteOverviewReference.child("title").setValue(noteDetailed.getTitle());
         }
 
-        // Upload image to firebase
 
 
         // Display that it was saved and auto-moves user to MainActivity
         Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+    }
+
+    /*
+        Upload image to Firebase Storage
+     */
+    private String uploadImage(){
+        if(mImageBitmap == null){
+            return null;
+        }
+
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "JPEG_" + timeStamp + ".jpg";
+        String imagePath = user.getUid() + "/" + imageName;
+
+        final StorageReference storageImages = storageReference.child(imagePath);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        mImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageData = baos.toByteArray();
+
+        UploadTask uploadTask = storageImages.putBytes(imageData);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Failed image upload" + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+            }
+        });
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getApplicationContext(), "Success image upload" + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+            }
+        });
+        return imagePath;
     }
 
     /*
