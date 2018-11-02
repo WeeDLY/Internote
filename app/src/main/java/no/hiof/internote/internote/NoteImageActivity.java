@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,7 +53,7 @@ public class NoteImageActivity extends AppCompatActivity {
     private EditText textContent;
 
     private DatabaseReference noteDetailedReference;
-    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    private StorageReference storageReference;
 
     private String currentNoteDetailedKey;
     private String currentNoteOverviewKey;
@@ -73,7 +75,9 @@ public class NoteImageActivity extends AppCompatActivity {
         textTitle = findViewById(R.id.textTitle);
         textLastEdited = findViewById(R.id.textLastEdited);
         textContent = findViewById(R.id.textContent);
+        imageView_noteImage = findViewById(R.id.imageView_image);
 
+        storageReference  = FirebaseStorage.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         currentNoteDetailedKey = getIntent().getStringExtra(Settings.INTENT_NOTEDETAILED_KEY);
         currentNoteOverviewKey = getIntent().getStringExtra(Settings.INTENT_NOTEOVERVIEW_KEY);
@@ -86,7 +90,6 @@ public class NoteImageActivity extends AppCompatActivity {
             fillFields();
         }
 
-        imageView_noteImage = findViewById(R.id.imageView_image);
     }
 
     /*
@@ -251,6 +254,17 @@ public class NoteImageActivity extends AppCompatActivity {
         // Set events, so we can check if the user made changes to the document
         this.textTitle.addTextChangedListener(new TextChangedListener());
         textContent.addTextChangedListener(new TextChangedListener());
+
+        // Download Image
+        downloadImage(noteDetailed.getImageUrl());
+    }
+
+    private void downloadImage(String url){
+        if(url == null)
+            return;
+        StorageReference storageImage = FirebaseStorage.getInstance().getReference(url);
+        Log.d("downloadImage: ", url);
+        Glide.with(this).load(storageImage).into(imageView_noteImage);
     }
 
     /*

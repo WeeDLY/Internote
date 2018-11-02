@@ -100,8 +100,13 @@ public class MainActivity extends AppCompatActivity {
                 int position = recyclerView.getChildAdapterPosition(view);
 
                 NoteOverview note = notes.get(position);
-
-                Intent intent = new Intent(MainActivity.this, NoteTextActivity.class);
+                Intent intent;
+                if(note.getImageUrl() != null){
+                    intent = new Intent(MainActivity.this, NoteImageActivity.class);
+                }
+                else{
+                    intent = new Intent(MainActivity.this, NoteTextActivity.class);
+                }
                 intent.putExtra(Settings.INTENT_NOTEDETAILED_KEY, note.getUid());
                 intent.putExtra(Settings.INTENT_NOTEOVERVIEW_KEY, note.getKey());
                 startActivity(intent);
