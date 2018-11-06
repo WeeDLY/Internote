@@ -1,14 +1,24 @@
 package no.hiof.internote.internote;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.PersistableBundle;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +29,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,13 +40,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import no.hiof.internote.internote.model.NoteDetailed;
-import no.hiof.internote.internote.model.NoteOverview;
-import no.hiof.internote.internote.model.Settings;
+import no.hiof.internote.internote.model.*;
 
 public class NoteImageActivity extends AppCompatActivity {
     private FirebaseUser user;
@@ -42,16 +54,18 @@ public class NoteImageActivity extends AppCompatActivity {
     private EditText textContent;
 
     private DatabaseReference noteDetailedReference;
+    private StorageReference storageReference;
 
     private String currentNoteDetailedKey;
     private String currentNoteOverviewKey;
 
-    public static final int REQUEST_IMAGE_CAPTURE = 1;
-    private ImageView imageView_noteImage;
-    public static final String IMAGE_KEY = "image_key";
-    private BitmapDrawable drawable;
+    private boolean deleteNote = false;
+    private boolean madeChanges = false;
 
-    private boolean deletingNote = false; // TODO: Has to be a better way, than this
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Bitmap mImageBitmap;
+    private ImageView imageView_noteImage;
+    private String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +76,9 @@ public class NoteImageActivity extends AppCompatActivity {
         textTitle = findViewById(R.id.textTitle);
         textLastEdited = findViewById(R.id.textLastEdited);
         textContent = findViewById(R.id.textContent);
+        imageView_noteImage = findViewById(R.id.imageView_image);
 
+        storageReference  = FirebaseStorage.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         currentNoteDetailedKey = getIntent().getStringExtra(Settings.INTENT_NOTEDETAILED_KEY);
         currentNoteOverviewKey = getIntent().getStringExtra(Settings.INTENT_NOTEOVERVIEW_KEY);
@@ -75,15 +91,94 @@ public class NoteImageActivity extends AppCompatActivity {
             fillFields();
         }
 
-        imageView_noteImage = findViewById(R.id.imageView_image);
+    }
 
-        // Setting the saved picture in the image view if there is any
-        if (savedInstanceState != null) {
-            Bitmap tmp = savedInstanceState.getParcelable(IMAGE_KEY);
-            if (tmp != null) {
-                drawable = new BitmapDrawable(getResources(), tmp);
-                imageView_noteImage.setImageDrawable(drawable);
+    /*
+        Capture a picture for the note
+    */
+    public void getAnotherPicture (View view) {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.i("IOEXception:", ex.getMessage());
             }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                madeChanges = true;
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+    /*
+        Create image from the camera
+    */
+    private File createImageFile() throws IOException {
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+    // Replaces the current picture in the image section
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            try {
+                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                imageView_noteImage.setImageBitmap(mImageBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Saving the picture
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    /*
+        Button click event: btnBackToMain
+     */
+    public void btnBackToMainOnClick(View view) {
+        goToMain();
+    }
+
+    /*
+        TextChanged event. Used for listening for changes in the document
+     */
+    private class TextChangedListener implements TextWatcher{
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            madeChanges = true;
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
         }
     }
 
@@ -105,12 +200,8 @@ public class NoteImageActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             // Deletes the note
             case R.id.menuDeleteNote:
-                // TODO: Add SnackBar for confirmation
-                // TODO: Clean up, so it's not ugly af code
+                deleteNote = true;
                 if(user != null && currentNoteDetailedKey != null && currentNoteOverviewKey != null){
-                    // Stops onDestroy from trying to save the document
-                    deletingNote = true;
-
                     DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
 
                     DatabaseReference noteDetailedRef = userReference.child(Settings.FIREBASE_NOTE_DETAILED).child(currentNoteDetailedKey);
@@ -118,8 +209,8 @@ public class NoteImageActivity extends AppCompatActivity {
 
                     DatabaseReference noteOverviewRef = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
                     noteOverviewRef.removeValue();
+                    goToMain();
                 }
-                goToMain();
                 break;
             // Goes back to MainActivity
             case R.id.menuBackToMain:
@@ -137,11 +228,16 @@ public class NoteImageActivity extends AppCompatActivity {
         startActivity(intentMain);
     }
 
+    /*
+        Android lifecycle: onPause event
+     */
     @Override
     protected void onPause() {
         super.onPause();
-        if(!deletingNote)
+        if(madeChanges && !deleteNote){
+            Log.d("SaveDocument", "SAVED");
             saveDocument(this);
+        }
     }
 
     /*
@@ -154,42 +250,29 @@ public class NoteImageActivity extends AppCompatActivity {
 
         TextView textTitle = findViewById(R.id.textTitle);
         textTitle.setText(noteDetailed.getTitle());
+
+
+        // Set events, so we can check if the user made changes to the document
+        this.textTitle.addTextChangedListener(new TextChangedListener());
+        textContent.addTextChangedListener(new TextChangedListener());
+
+        // Download Image
+        downloadImage(noteDetailed.getImageUrl());
     }
 
-    /*
-        Capture a picture for the note
-    */
-    public void getAnotherPicture (View view) {
-        Intent intentPic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intentPic.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(intentPic, REQUEST_IMAGE_CAPTURE);
-        }
-    }
+    private void downloadImage(String url){
+        if(url == null)
+            return;
 
-    // Replaces the current picture in the image section
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Setting the picture taken
-            Bundle extras = data.getExtras();
-            Bitmap picture = (Bitmap) extras.get("data");
-            imageView_noteImage.setImageBitmap(picture);
-
-            // converting the Bitmap to a BitmapDrawable
-            drawable = new BitmapDrawable(getResources(), picture);
-        } else {
-            Toast.makeText(this, "Couldn't get picture", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // Saving the picture
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (drawable != null) {
-            outState.putParcelable(IMAGE_KEY, drawable.getBitmap());
-        }
+        final long ONE_MEGABYTE = 1024 * 1024;
+        StorageReference storageImage = FirebaseStorage.getInstance().getReference(url);
+        storageImage.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView_noteImage.setImageBitmap(bitmap);
+            }
+        });
     }
 
     /*
@@ -201,11 +284,10 @@ public class NoteImageActivity extends AppCompatActivity {
         documentReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // TODO: has to be a better way, than using boolean deletingNote
-                if(!deletingNote){
-                    noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
-                    fillFields();
-                }
+                noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
+                if(noteDetailed == null)
+                    noteDetailed = new NoteDetailed("New note", "", System.currentTimeMillis());
+                fillFields();
             }
 
             @Override
@@ -219,11 +301,12 @@ public class NoteImageActivity extends AppCompatActivity {
         Saves the current document and moves user to MainActivity
      */
     private void saveDocument(Context context){
-        // TODO: Have to save it locally. Not logged in as a user
-        if(user == null){
-            Toast.makeText(context, "TODO: Save locally", Toast.LENGTH_LONG).show();
+        // Upload image(if image was taken)
+        String imagePath = uploadImage();
+        if(imagePath == null){
             return;
         }
+        noteDetailed.setImageUrl(imagePath);
 
         // Update current noteDetailed
         noteDetailed.setTitle(textTitle.getText().toString());
@@ -257,7 +340,50 @@ public class NoteImageActivity extends AppCompatActivity {
             noteOverviewReference.child("title").setValue(noteDetailed.getTitle());
         }
 
+
+
         // Display that it was saved and auto-moves user to MainActivity
         Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+    }
+
+    /*
+        Upload image to Firebase Storage
+     */
+    private String uploadImage(){
+        if(mImageBitmap == null){
+            return null;
+        }
+
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "JPEG_" + timeStamp + ".jpg";
+        String imagePath = user.getUid() + "/" + imageName;
+
+        final StorageReference storageImages = storageReference.child(imagePath);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        mImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageData = baos.toByteArray();
+
+        UploadTask uploadTask = storageImages.putBytes(imageData);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Failed image upload" + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+            }
+        });
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getApplicationContext(), "Success image upload" + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+            }
+        });
+        return imagePath;
+    }
+
+    /*
+        GoToMain Menu
+     */
+    public void btnBackOnClick(View view) {
+        goToMain();
     }
 }
