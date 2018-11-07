@@ -29,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,8 +51,9 @@ public class NoteImageActivity extends AppCompatActivity {
     private EditText textLastEdited;
     private EditText textContent;
 
+    private DatabaseReference firebaseDatabaseReference;
+
     private DatabaseReference noteDetailedReference;
-    private StorageReference storageReference;
 
     private String currentNoteDetailedKey;
     private String currentNoteOverviewKey;
@@ -63,6 +62,8 @@ public class NoteImageActivity extends AppCompatActivity {
     private boolean madeChanges = false;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+    private final long ONE_MEGABYTE = 1024 * 1024;
+
     private Bitmap mImageBitmap;
     private ImageView imageView_noteImage;
     private String mCurrentPhotoPath;
@@ -78,7 +79,7 @@ public class NoteImageActivity extends AppCompatActivity {
         textContent = findViewById(R.id.textContent);
         imageView_noteImage = findViewById(R.id.imageView_image);
 
-        storageReference  = FirebaseStorage.getInstance().getReference();
+        firebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         currentNoteDetailedKey = getIntent().getStringExtra(Settings.INTENT_NOTEDETAILED_KEY);
         currentNoteOverviewKey = getIntent().getStringExtra(Settings.INTENT_NOTEOVERVIEW_KEY);
@@ -202,7 +203,7 @@ public class NoteImageActivity extends AppCompatActivity {
             case R.id.menuDeleteNote:
                 deleteNote = true;
                 if(user != null && currentNoteDetailedKey != null && currentNoteOverviewKey != null){
-                    DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
+                    DatabaseReference userReference = firebaseDatabaseReference.child(user.getUid());
 
                     DatabaseReference noteDetailedRef = userReference.child(Settings.FIREBASE_NOTE_DETAILED).child(currentNoteDetailedKey);
                     noteDetailedRef.removeValue();
@@ -260,11 +261,13 @@ public class NoteImageActivity extends AppCompatActivity {
         downloadImage(noteDetailed.getImageUrl());
     }
 
+    /*
+        Downloads image from Firebase
+     */
     private void downloadImage(String url){
         if(url == null)
             return;
 
-        final long ONE_MEGABYTE = 1024 * 1024;
         StorageReference storageImage = FirebaseStorage.getInstance().getReference(url);
         storageImage.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -279,9 +282,7 @@ public class NoteImageActivity extends AppCompatActivity {
         Retrieves document information from firebase
      */
     private void retrieveDocument(String documentId){
-        FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
-        DatabaseReference documentReference = databaseReference.getReference();
-        documentReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
+        firebaseDatabaseReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_DETAILED).child(documentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 noteDetailed = dataSnapshot.getValue(NoteDetailed.class);
@@ -303,17 +304,16 @@ public class NoteImageActivity extends AppCompatActivity {
     private void saveDocument(Context context){
         // Upload image(if image was taken)
         String imagePath = uploadImage();
-        if(imagePath == null){
-            return;
+        if(imagePath != null){
+            noteDetailed.setImageUrl(imagePath);
         }
-        noteDetailed.setImageUrl(imagePath);
 
         // Update current noteDetailed
         noteDetailed.setTitle(textTitle.getText().toString());
         noteDetailed.setContent(textContent.getText().toString());
         noteDetailed.setLastEdited(System.currentTimeMillis());
 
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
+        DatabaseReference userReference = firebaseDatabaseReference.child(user.getUid());
         // Update NoteDetailed to firebase
 
         // Note does not exist, writes a new NoteDetailed to database
@@ -340,10 +340,8 @@ public class NoteImageActivity extends AppCompatActivity {
             noteOverviewReference.child("title").setValue(noteDetailed.getTitle());
         }
 
-
-
         // Display that it was saved and auto-moves user to MainActivity
-        Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, noteDetailed.getTitle() + " saved", Toast.LENGTH_LONG).show();
     }
 
     /*
@@ -359,7 +357,7 @@ public class NoteImageActivity extends AppCompatActivity {
         String imageName = "JPEG_" + timeStamp + ".jpg";
         String imagePath = user.getUid() + "/" + imageName;
 
-        final StorageReference storageImages = storageReference.child(imagePath);
+        StorageReference storageImages = FirebaseStorage.getInstance().getReference().child(imagePath);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         mImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageData = baos.toByteArray();
