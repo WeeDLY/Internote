@@ -1,5 +1,6 @@
 package no.hiof.internote.internote;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -48,5 +49,10 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void applyChanges(View view){
+        Intent intentMain = new Intent(this, MainActivity.class);
+        startActivity(intentMain);
     }
 }
