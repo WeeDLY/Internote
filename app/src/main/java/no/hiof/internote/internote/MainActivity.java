@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import no.hiof.internote.internote.adapter.NoteRecyclerAdapter;
 import no.hiof.internote.internote.fragment.NavigationDrawerFragment;
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-
 
         TextView toolbarTextUser = findViewById(R.id.toolbarTextUser);
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 noteOverview.setKey(dataSnapshot.getKey());
                 notes.add(noteOverview);
                 notesKey.add(noteOverview.getKey());
+                Collections.sort(notes);
                 noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
             }
 
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
                 int position = notesKey.indexOf(noteOverview.getKey());
                 notes.set(position, noteOverview);
+                Collections.sort(notes);
                 noteRecyclerAdapter.notifyItemChanged(position);
             }
 
