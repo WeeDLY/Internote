@@ -22,9 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".NoteTextActivity" />
-        <activity android:name=".NoteImageActivity"/>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".NoteTextActivity" android:noHistory="true" />
+        <activity android:name=".NoteImageActivity" android:noHistory="true" />
         <activity android:name=".AboutUsActivity"/>
         <activity android:name=".SettingsActivity"/>
     </application>

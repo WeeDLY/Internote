@@ -88,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 // User already signed in
                 else{
-                    Toast.makeText(LoginActivity.this, "createAuthListener", Toast.LENGTH_SHORT).show();
                     goToMain();
                 }
             }

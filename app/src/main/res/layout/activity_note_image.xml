@@ -21,7 +21,7 @@
         android:text="@string/date_text_filler"
         android:textSize="@dimen/textview_date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guildelineMiddle"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -35,13 +35,14 @@
         android:hint="@string/note_title_filler"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHeader"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guildelineMiddle"
         app:layout_constraintTop_toBottomOf="@+id/textLastEdited" />
 
     <EditText
         android:id="@+id/textContent"
-        android:layout_width="182dp"
-        android:layout_height="384dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:gravity="top"
@@ -49,7 +50,7 @@
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guildelineMiddle"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHeader" />
 
     <android.support.constraint.Guideline
@@ -64,31 +65,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.60" />
 
     <ImageView
         android:id="@+id/imageView_image"
-        android:layout_width="180dp"
-        android:layout_height="188dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:contentDescription="@string/contentDescription_noteImageActivity_note_image"
+        android:onClick="checkCameraPermissions"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHeader"
         app:layout_constraintEnd_toStartOf="@+id/guildelineMiddle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHeader"
-        app:srcCompat="@drawable/thumbnail_placeholder" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:onClick="checkCameraPermissions"
-        android:contentDescription="@string/contentDescription_noteImageActivity_note_image"
-        app:layout_constraintEnd_toEndOf="@+id/imageView_image"
-        app:layout_constraintStart_toStartOf="@+id/imageView_image"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_image"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <ImageButton
@@ -100,6 +91,7 @@
         android:onClick="btnBackToMainOnClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/btn_apply_changes"
         app:srcCompat="?attr/homeAsUpIndicator" />
 
 </android.support.constraint.ConstraintLayout>

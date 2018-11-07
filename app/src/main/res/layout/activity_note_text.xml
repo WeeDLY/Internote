@@ -70,6 +70,8 @@
         android:onClick="btnBackOnClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="?android:attr/homeAsUpIndicator" />
+        app:srcCompat="?android:attr/homeAsUpIndicator"
+        android:background="@drawable/btn_apply_changes"
+        />
 
 </android.support.constraint.ConstraintLayout>
