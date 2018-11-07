@@ -70,11 +70,15 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putInt(SPINNER, spinnerColorTheme.getSelectedItemPosition());
+
+        editor.apply();
+
+        Toast.makeText(this, "Changes saved", Toast.LENGTH_LONG).show();
     }
 
     public void loadData(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
-        spinnerPosition = sharedPreferences.getInt(SPINNER, 0);
+        spinnerPosition = sharedPreferences.getInt(SPINNER, 1);
     }
 }
