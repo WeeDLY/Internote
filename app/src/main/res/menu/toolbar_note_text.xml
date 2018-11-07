@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menuDeleteNote"
+        app:showAsAction="never"
+        android:title="@string/delete_note">
+    </item>
+    <item
+        android:id="@+id/menuConvertImageNote"
+        app:showAsAction="never"
+        android:title="@string/convert_to_image_note">
+    </item>
+    <item
+        android:id="@+id/menuBackToMain"
+        app:showAsAction="never"
+        android:title="@string/back_to_main">
+    </item>
+</menu>

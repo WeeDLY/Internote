@@ -373,6 +373,7 @@ public class NoteImageActivity extends AppCompatActivity {
             DatabaseReference noteOverviewReference = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
             noteOverviewReference.child("lastEdited").setValue(noteDetailed.getLastEdited());
             noteOverviewReference.child("title").setValue(noteDetailed.getTitle());
+            noteOverviewReference.child("imageUrl").setValue(noteDetailed.getImageUrl());
         }
     }
 

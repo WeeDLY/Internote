@@ -91,7 +91,7 @@ public class NoteTextActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_note, menu);
+        inflater.inflate(R.menu.toolbar_note_text, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -114,6 +114,13 @@ public class NoteTextActivity extends AppCompatActivity {
                     noteOverviewRef.removeValue();
                     goToMain();
                 }
+                break;
+            // Converts NoteText to NoteImage
+            case R.id.menuConvertImageNote:
+                Intent imageIntent = new Intent(NoteTextActivity.this, NoteImageActivity.class);
+                imageIntent.putExtra(Settings.INTENT_NOTEDETAILED_KEY, currentNoteDetailedKey);
+                imageIntent.putExtra(Settings.INTENT_NOTEOVERVIEW_KEY, currentNoteOverviewKey);
+                startActivity(imageIntent);
                 break;
             // Goes back to MainActivity
             case R.id.menuBackToMain:
