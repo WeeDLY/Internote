@@ -57,8 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.25"
-        tools:onClick="getAnotherPicture" />
+        app:layout_constraintGuide_percent="0.25"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guildelineMiddle"
@@ -85,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:onClick="getAnotherPicture"
+        android:onClick="checkCameraPermissions"
         android:contentDescription="@string/contentDescription_noteImageActivity_note_image"
         app:layout_constraintEnd_toEndOf="@+id/imageView_image"
         app:layout_constraintStart_toStartOf="@+id/imageView_image"
