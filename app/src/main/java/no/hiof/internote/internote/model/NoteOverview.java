@@ -8,7 +8,7 @@ import java.util.Date;
     Class NoteOverview
     Used to display users file in MainActivity
  */
-public class NoteOverview extends Note{
+public class NoteOverview extends Note implements Comparable<NoteOverview>{
     private String uid;
 
     @Exclude
@@ -46,5 +46,12 @@ public class NoteOverview extends Note{
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    @Override
+    public int compareTo(NoteOverview o) {
+        if (o.getLastEdited() == this.getLastEdited())
+            return 0;
+        return o.getLastEdited() > this.getLastEdited() ? 1 : -1;
     }
 }
