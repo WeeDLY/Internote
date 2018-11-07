@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.Manifest;
 import android.content.Context;
@@ -47,7 +48,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 import no.hiof.internote.internote.model.*;
 
-public class NoteImageActivity extends AppCompatActivity  {
+public class NoteImageActivity extends AppCompatActivity {
     private FirebaseUser user;
     private NoteDetailed noteDetailed;
     private EditText textTitle;
@@ -63,6 +64,7 @@ public class NoteImageActivity extends AppCompatActivity  {
 
     private boolean deleteNote = false;
     private boolean madeChanges = false;
+    private boolean accessingCamera = false;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_CAMERA_STORAGE = 2;
@@ -132,11 +134,12 @@ public class NoteImageActivity extends AppCompatActivity  {
             }
             catch (IOException ex) {
                 // Error occurred while creating the File
-                Log.i("IOEXception:", ex.getMessage());
+                Log.d("IOEXception:", ex.getMessage());
             }
             // Continue only if the File was successfully created
             if (imageFile != null) {
                 madeChanges = true;
+                accessingCamera = true;
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -236,6 +239,10 @@ public class NoteImageActivity extends AppCompatActivity  {
 
                     DatabaseReference noteOverviewRef = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).child(currentNoteOverviewKey);
                     noteOverviewRef.removeValue();
+
+                    StorageReference storageImages = FirebaseStorage.getInstance().getReference().child(noteDetailed.getImageUrl());
+                    storageImages.delete();
+
                     goToMain();
                 }
                 break;
@@ -251,6 +258,7 @@ public class NoteImageActivity extends AppCompatActivity  {
         Takes user to MainActivity
      */
     private void goToMain(){
+        accessingCamera = false;
         Intent intentMain = new Intent(this, MainActivity.class);
         startActivity(intentMain);
     }
@@ -262,7 +270,9 @@ public class NoteImageActivity extends AppCompatActivity  {
     protected void onPause() {
         super.onPause();
         if(madeChanges && !deleteNote){
-            saveDocument(this);
+            Log.d("onPause", "SaveDoc");
+            if(!accessingCamera)
+                saveDocument(this);
         }
     }
 
@@ -324,7 +334,7 @@ public class NoteImageActivity extends AppCompatActivity  {
     }
 
     /*
-        Saves the current document and moves user to MainActivity
+        Saves the current document
      */
     private void saveDocument(Context context){
         // Upload image(if image was taken)
@@ -397,13 +407,7 @@ public class NoteImageActivity extends AppCompatActivity  {
                 Toast.makeText(getApplicationContext(), "image uploaded Successfully", Toast.LENGTH_LONG).show();
             }
         });
-        return imagePath;
-    }
 
-    /*
-        GoToMain Menu
-     */
-    public void btnBackOnClick(View view) {
-        goToMain();
+        return imagePath;
     }
 }

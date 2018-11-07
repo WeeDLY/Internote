@@ -4,9 +4,11 @@ TODO
     This includes Light/Dark theme
        Font size, etc, etc.
 3. Make user able to edit settings and save them locally on their phone
-4. NoteImageActivity, able to take image from phone/upload from phone and save image in firebase
+4. NoteImageActivity, able to take image from phone/upload from phone and save image in firebase | FINISHED
 5. Fix overall small issues
+6. Deleting NoteImage does not delete the image
 
 BUGS
 1. Logging in(for the first time, not auto-login), letting it load your notes, then pressing the "back button", will remove all the notes.
 2. Make note and leave. Edit the note, leave. Edit note -> Delete. Crashes application.
+(3. If you create a "NoteImage", goes to main menu, and open the note, before image has been uploaded. The image won't be shown)
