@@ -1,6 +1,14 @@
 package no.hiof.internote.internote.model;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.widget.Toast;
+
 import no.hiof.internote.internote.R;
+
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class Settings {
     public final static String FIREBASE_NOTE_OVERVIEW = "NoteOverview";
@@ -14,7 +22,7 @@ public class Settings {
 
     private int fontSize;
     private String fontFamily;
-    private static int appTheme = 1;
+    private static int appTheme = 0;
 
     public Settings(){
         fontSize = 12;
@@ -68,5 +76,23 @@ public class Settings {
 
     public static int getAppTheme(){
         return Settings.appTheme;
+    }
+
+    /*
+        Loads user settings
+     */
+    public static void loadData(Context ctx){
+        SharedPreferences prefs = ctx.getSharedPreferences(Settings.USER_PREFERENCE, MODE_PRIVATE);
+        Settings.setAppTheme(prefs.getInt(Settings.SETTINGS_THEME, 0));
+    }
+
+    /*
+        Saves user settings
+     */
+    public static void saveData(Context ctx, int appTheme){
+        SharedPreferences sharedPreferences = ctx.getSharedPreferences(Settings.USER_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(Settings.SETTINGS_THEME, appTheme);
+        editor.apply();
     }
 }

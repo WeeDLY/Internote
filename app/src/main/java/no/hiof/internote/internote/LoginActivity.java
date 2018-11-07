@@ -28,7 +28,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        loadSettings();
+        Settings.loadData(this);
+        setTheme(Settings.getTheme());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -39,13 +40,6 @@ public class LoginActivity extends AppCompatActivity {
             firebaseAuth = FirebaseAuth.getInstance();
             createAuthenticationListener();
         }
-    }
-
-    private void loadSettings(){
-        SharedPreferences prefs = getSharedPreferences(Settings.USER_PREFERENCE, MODE_PRIVATE);
-        int theme = prefs.getInt(Settings.SETTINGS_THEME, 1);
-        Log.d("loaded: ", String.valueOf(theme));
-        Settings.setAppTheme(theme);
     }
 
     // Check if user has internet connection

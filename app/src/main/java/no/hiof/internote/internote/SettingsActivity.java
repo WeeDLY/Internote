@@ -59,10 +59,11 @@ public class SettingsActivity extends AppCompatActivity {
         startActivity(intentMain);
     }
 
+    /*
+        Saves user settings
+     */
     public void saveData(){
-        SharedPreferences sharedPreferences = getSharedPreferences(Settings.USER_PREFERENCE, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(Settings.SETTINGS_THEME, spinnerColorTheme.getSelectedItemPosition());
-        editor.apply();
+        int appTheme = spinnerColorTheme.getSelectedItemPosition();
+        Settings.saveData(this, appTheme);
     }
 }
