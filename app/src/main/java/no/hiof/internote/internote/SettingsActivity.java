@@ -19,11 +19,6 @@ public class SettingsActivity extends AppCompatActivity {
     private List<String> colorThemeList = new ArrayList<>();
     private Spinner spinnerColorTheme;
 
-    public static final String SHARED_PREFS = "sharedPrefs";
-    public static final String SPINNER = "Spinner";
-
-    private int spinnerPosition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(Settings.getTheme());
@@ -31,7 +26,6 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         setUpSpinner();
-        loadData();
     }
 
     private void setUpSpinner(){
@@ -66,19 +60,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void saveData(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Settings.USER_PREFERENCE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putInt(SPINNER, spinnerColorTheme.getSelectedItemPosition());
-
+        editor.putInt(Settings.SETTINGS_THEME, spinnerColorTheme.getSelectedItemPosition());
         editor.apply();
 
         Toast.makeText(this, "Changes saved", Toast.LENGTH_LONG).show();
-    }
-
-    public void loadData(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-
-        spinnerPosition = sharedPreferences.getInt(SPINNER, 1);
     }
 }

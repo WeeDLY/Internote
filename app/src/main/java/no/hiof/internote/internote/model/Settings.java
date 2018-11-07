@@ -1,7 +1,5 @@
 package no.hiof.internote.internote.model;
 
-import android.content.res.Resources;
-
 import no.hiof.internote.internote.R;
 
 public class Settings {
@@ -10,6 +8,9 @@ public class Settings {
 
     public final static String INTENT_NOTEDETAILED_KEY = "INTENT_NOTE_DETAILED"; // NoteDetailedKey. Used to update NoteDetailed
     public final static String INTENT_NOTEOVERVIEW_KEY = "INTENT_NOTE_OVERVIEW"; // NoteOverviewKey. Used to update "lastEdited"
+
+    public static final String USER_PREFERENCE = "USER_PREFERENCE";
+    public static final String SETTINGS_THEME = "SETTINGS_THEME";
 
     private int fontSize;
     private String fontFamily;

@@ -2,6 +2,7 @@ package no.hiof.internote.internote;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import no.hiof.internote.internote.model.Settings;
 
@@ -26,10 +28,10 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadSettings();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        //SettingsActivity.loadData();
 
         boolean internetAvailable = hasNetworkConnection();
 
@@ -37,6 +39,13 @@ public class LoginActivity extends AppCompatActivity {
             firebaseAuth = FirebaseAuth.getInstance();
             createAuthenticationListener();
         }
+    }
+
+    private void loadSettings(){
+        SharedPreferences prefs = getSharedPreferences(Settings.USER_PREFERENCE, MODE_PRIVATE);
+        int theme = prefs.getInt(Settings.SETTINGS_THEME, 1);
+        Log.d("loaded: ", String.valueOf(theme));
+        Settings.setAppTheme(theme);
     }
 
     // Check if user has internet connection
