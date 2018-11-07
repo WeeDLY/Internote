@@ -64,7 +64,5 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(Settings.SETTINGS_THEME, spinnerColorTheme.getSelectedItemPosition());
         editor.apply();
-
-        Toast.makeText(this, "Changes saved", Toast.LENGTH_LONG).show();
     }
 }
