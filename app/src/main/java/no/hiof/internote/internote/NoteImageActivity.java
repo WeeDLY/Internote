@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -42,9 +43,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 import no.hiof.internote.internote.model.*;
 
-public class NoteImageActivity extends AppCompatActivity {
+public class NoteImageActivity extends AppCompatActivity  {
     private FirebaseUser user;
     private NoteDetailed noteDetailed;
     private EditText textTitle;
@@ -62,11 +65,12 @@ public class NoteImageActivity extends AppCompatActivity {
     private boolean madeChanges = false;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int PERMISSION_CAMERA_STORAGE = 2;
     private final long ONE_MEGABYTE = 1024 * 1024;
 
     private Bitmap mImageBitmap;
     private ImageView imageView_noteImage;
-    private String mCurrentPhotoPath;
+    private String mCurrentImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,24 +98,46 @@ public class NoteImageActivity extends AppCompatActivity {
 
     }
 
+    public void checkCameraPermissions(View view){
+        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            getAnotherImage();
+        }
+        else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, "We need to access your camera and storage",
+                    PERMISSION_CAMERA_STORAGE, perms);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            getAnotherImage();
+        }
+    }
+
     /*
-        Capture a picture for the note
-    */
-    public void getAnotherPicture (View view) {
+            Capture a image for the note
+        */
+    public void getAnotherImage () {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
+            // Create the File where the image should go
+            File imageFile = null;
             try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
+                imageFile = createImageFile();
+            }
+            catch (IOException ex) {
                 // Error occurred while creating the File
                 Log.i("IOEXception:", ex.getMessage());
             }
             // Continue only if the File was successfully created
-            if (photoFile != null) {
+            if (imageFile != null) {
                 madeChanges = true;
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -135,16 +161,16 @@ public class NoteImageActivity extends AppCompatActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        mCurrentImagePath = "file:" + image.getAbsolutePath();
         return image;
     }
 
-    // Replaces the current picture in the image section
+    // Replaces the current image in the image section
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             try {
-                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentImagePath));
                 imageView_noteImage.setImageBitmap(mImageBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -152,7 +178,7 @@ public class NoteImageActivity extends AppCompatActivity {
         }
     }
 
-    // Saving the picture
+    // Saving the image
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -236,7 +262,6 @@ public class NoteImageActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if(madeChanges && !deleteNote){
-            Log.d("SaveDocument", "SAVED");
             saveDocument(this);
         }
     }
@@ -339,9 +364,6 @@ public class NoteImageActivity extends AppCompatActivity {
             noteOverviewReference.child("lastEdited").setValue(noteDetailed.getLastEdited());
             noteOverviewReference.child("title").setValue(noteDetailed.getTitle());
         }
-
-        // Display that it was saved and auto-moves user to MainActivity
-        Toast.makeText(context, noteDetailed.getTitle() + " saved", Toast.LENGTH_LONG).show();
     }
 
     /*
@@ -372,7 +394,7 @@ public class NoteImageActivity extends AppCompatActivity {
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(getApplicationContext(), "Success image upload" + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "image uploaded Successfully", Toast.LENGTH_LONG).show();
             }
         });
         return imagePath;
