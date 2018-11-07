@@ -53,8 +53,6 @@ public abstract class Note {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    //TODO: Tags?
-
 
     @Override
     public String toString() {

@@ -78,13 +78,11 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
             Date lastEditedDate = new Date(current.getLastEdited());
             this.lastEdited.setText(new SimpleDateFormat("HH:mm dd-MM-yyyy").format(lastEditedDate));
 
-            if (imageUrl != null && !imageUrl.equals("")) {
-                Glide.with(thumbnail.getContext())
-                        .load(imageUrl)
-                        .into(thumbnail);
+            if (imageUrl != null){
+                thumbnail.setImageResource(R.drawable.thumbnail_placeholder);
             }
             else
-                thumbnail.setImageResource(R.drawable.thumbnail_placeholder);
+                thumbnail.setImageResource(R.drawable.text_document_logo);
         }
 
         @Override
