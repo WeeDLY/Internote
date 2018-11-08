@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Loads the user settings
         Settings.loadData(this);
         setTheme(Settings.getTheme());
 
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // Check if user has internet connection
+    // Checks if user has internet connection
     private boolean hasNetworkConnection(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
