@@ -21,4 +21,5 @@
     <string name="contentDescription_noteImageActivity_note_image">Note image</string>
     <string name="convert_to_image_note">Convert to Image Note</string>
     <string name="contentDescription_activity_note_image_btnBackToMain">Click to go back to main</string>
+    <string name="apply_changes">Apply Changes</string>
 </resources>
