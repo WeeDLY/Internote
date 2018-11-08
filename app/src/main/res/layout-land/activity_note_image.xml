@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:clickable="false"
         android:cursorVisible="false"
         android:focusable="false"
@@ -20,7 +19,6 @@
         android:inputType="date"
         android:text="@string/date_text_filler"
         android:textSize="@dimen/textview_date"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guildelineMiddle"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,12 +28,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/note_title_filler"
         android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHeader"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guildelineMiddle"
         app:layout_constraintTop_toBottomOf="@+id/textLastEdited" />
 
@@ -51,7 +47,7 @@
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guildelineMiddle"
         app:layout_constraintTop_toTopOf="@+id/guidelineHeader" />
 
     <android.support.constraint.Guideline
@@ -59,14 +55,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.32" />
+        app:layout_constraintGuide_percent="0.25"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guildelineMiddle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.60" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <ImageView
         android:id="@+id/imageView_image"
@@ -75,9 +71,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:contentDescription="@string/contentDescription_noteImageActivity_note_image"
         android:onClick="checkCameraPermissions"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guildelineMiddle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -94,6 +91,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="?attr/homeAsUpIndicator"
-        android:contentDescription="@string/contentDescription_activity_note_image_btnBackToMain" />
+        android:contentDescription="@string/contentDescription_activity_note_image_btnBackToMain"/>
 
 </android.support.constraint.ConstraintLayout>
