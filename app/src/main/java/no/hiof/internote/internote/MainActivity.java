@@ -124,16 +124,16 @@ public class MainActivity extends AppCompatActivity {
         newImagenote.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteImageActivity.class);
-                startActivity(startNoteBasicActivity);
+                Intent intentNoteImage = new Intent(MainActivity.this, NoteImageActivity.class);
+                startActivity(intentNoteImage);
             }
         });
 
         newTextnote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startNoteBasicActivity = new Intent(MainActivity.this, NoteTextActivity.class);
-                startActivity(startNoteBasicActivity);
+                Intent intentNoteText = new Intent(MainActivity.this, NoteTextActivity.class);
+                startActivity(intentNoteText);
             }
         });
     }
