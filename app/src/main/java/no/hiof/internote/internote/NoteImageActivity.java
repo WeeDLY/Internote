@@ -67,7 +67,7 @@ public class NoteImageActivity extends AppCompatActivity {
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_CAMERA_STORAGE = 2;
-    private final long ONE_MEGABYTE = 1024 * 1024;
+    private final long ONE_MEGABYTE = 1024 * 1024 * 25;
 
     private Bitmap mImageBitmap;
     private ImageView imageView_noteImage;
