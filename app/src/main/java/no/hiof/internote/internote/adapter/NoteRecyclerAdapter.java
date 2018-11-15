@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,7 +56,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         return data.size();
     }
 
-    class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class NoteViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView lastEdited;
         ImageView thumbnail;
@@ -83,12 +80,6 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
             }
             else
                 thumbnail.setImageResource(R.drawable.text_document_logo);
-        }
-
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(view.getContext(), NoteTextActivity.class);
-            view.getContext().startActivity(intent);
         }
     }
 }

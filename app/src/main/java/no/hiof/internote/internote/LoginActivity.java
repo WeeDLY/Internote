@@ -2,7 +2,6 @@ package no.hiof.internote.internote;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
-import java.util.Set;
 
 import no.hiof.internote.internote.model.Settings;
 

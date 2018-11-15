@@ -1,14 +1,11 @@
 package no.hiof.internote.internote.model;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import no.hiof.internote.internote.R;
 
 import static android.content.Context.MODE_PRIVATE;
-
 
 public class Settings {
     public final static String FIREBASE_NOTE_OVERVIEW = "NoteOverview";
@@ -19,6 +16,8 @@ public class Settings {
 
     public static final String USER_PREFERENCE = "USER_PREFERENCE";
     public static final String SETTINGS_THEME = "SETTINGS_THEME";
+
+    public static final long MAX_IMAGE_DOWNLOAD_SIZE = 1024 * 1024 * 25; // 25MB is max size for image download from Firebase Storage
 
     private int fontSize;
     private String fontFamily;
