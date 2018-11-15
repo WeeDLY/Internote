@@ -1,6 +1,5 @@
 package no.hiof.internote.internote.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,8 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextThemeWrapper;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +21,7 @@ import no.hiof.internote.internote.AboutUsActivity;
 import no.hiof.internote.internote.LoginActivity;
 import no.hiof.internote.internote.R;
 import no.hiof.internote.internote.SettingsActivity;
+import no.hiof.internote.internote.model.Audio;
 
 public class NavigationDrawerFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
