@@ -81,4 +81,9 @@ public class SettingsActivity extends AppCompatActivity {
         boolean sound = checkSound.isChecked();
         Settings.saveData(this, appTheme, sound);
     }
+
+    public void TextView_sound_onClick(View view) {
+        checkSound.setChecked(checkSound.isChecked() ? false : true);
+        Settings.setSound(checkSound.isChecked());
+    }
 }
