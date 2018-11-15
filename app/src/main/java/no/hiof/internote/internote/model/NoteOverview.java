@@ -1,5 +1,7 @@
 package no.hiof.internote.internote.model;
 
+import android.util.Log;
+
 import com.google.firebase.database.Exclude;
 
 import java.util.Date;
@@ -33,6 +35,15 @@ public class NoteOverview extends Note implements Comparable<NoteOverview>{
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public void setTitleShort(String title){
+        int difference = title.length() - Settings.MAX_TITLE_LENGTH;
+        if(difference > 0){
+            String newTitle = getTitle().substring(0, Settings.MAX_TITLE_LENGTH - 3);
+            newTitle += "...";
+            setTitle(newTitle);
+        }
     }
 
     @Override

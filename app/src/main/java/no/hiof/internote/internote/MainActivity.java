@@ -158,6 +158,9 @@ public class MainActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
+
+                noteOverview.setTitleShort(noteOverview.getTitle());
+
                 notes.add(noteOverview);
                 notesKey.add(noteOverview.getKey());
                 Collections.sort(notes);
@@ -169,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
+
+                noteOverview.setTitleShort(noteOverview.getTitle());
 
                 int position = notesKey.indexOf(noteOverview.getKey());
                 notes.set(position, noteOverview);

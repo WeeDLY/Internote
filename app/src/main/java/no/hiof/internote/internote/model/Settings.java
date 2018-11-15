@@ -19,7 +19,7 @@ public class Settings {
     public static final String SETTINGS_CHECK_SOUND = "SETTINGS_CHECK_SOUND";
 
     public static final long MAX_IMAGE_DOWNLOAD_SIZE = 1024 * 1024 * 25; // 25MB is max size for image download from Firebase Storage
-    public static final int MAX_TITLE_LENGTH = 10; // Max length on the title field in the note overview
+    public static final int MAX_TITLE_LENGTH = 12; // Max length on the title field in the note overview
 
     private static boolean sound = true;
     private static int appTheme = 0;
