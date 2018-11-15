@@ -42,7 +42,6 @@ public class NoteOverview extends Note implements Comparable<NoteOverview>{
         if(difference > 0){
             String newTitle = getTitle().substring(0, Settings.MAX_TITLE_LENGTH - 3);
             newTitle += "...";
-            Log.d("setTitleShort", newTitle);
             setTitle(newTitle);
         }
     }
