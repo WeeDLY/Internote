@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         else{
             toolbarTextUser.setText("(Offline)");
         }
-
         setUpFloatingActionButton();
         setUpRecyclerView();
         setUpNavigationDrawer();
