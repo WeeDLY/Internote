@@ -1,14 +1,14 @@
 package no.hiof.internote.internote;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,8 @@ public class SettingsActivity extends AppCompatActivity {
     private List<String> colorThemeList = new ArrayList<>();
     private Spinner spinnerColorTheme;
 
+    private CheckBox checkSound;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(Settings.getTheme());
@@ -26,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         setUpSpinner();
+        setUpCheckSound();
     }
 
     private void setUpSpinner(){
@@ -52,6 +55,17 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    private void setUpCheckSound(){
+        checkSound = findViewById(R.id.checkBoxSound);
+        checkSound.setChecked(Settings.getSound());
+        checkSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Settings.setSound(isChecked);
+            }
+        });
+    }
+
     public void applyChanges(View view){
         saveData();
 
@@ -64,6 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
      */
     public void saveData(){
         int appTheme = spinnerColorTheme.getSelectedItemPosition();
-        Settings.saveData(this, appTheme);
+        boolean sound = checkSound.isChecked();
+        Settings.saveData(this, appTheme, sound);
     }
 }
