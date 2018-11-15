@@ -173,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
 
+                noteOverview.setTitleShort(noteOverview.getTitle());
+
                 int position = notesKey.indexOf(noteOverview.getKey());
                 notes.set(position, noteOverview);
                 Collections.sort(notes);
