@@ -7,6 +7,9 @@ import android.util.Log;
 
 public class Audio {
     public static void playSound(Context ctx, String soundFile) {
+        if(!Settings.getSound()){
+            return;
+        }
         MediaPlayer m = new MediaPlayer();
         try {
             if (m.isPlaying()) {

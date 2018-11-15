@@ -16,16 +16,15 @@ public class Settings {
 
     public static final String USER_PREFERENCE = "USER_PREFERENCE";
     public static final String SETTINGS_THEME = "SETTINGS_THEME";
+    public static final String SETTINGS_CHECK_SOUND = "SETTINGS_CHECK_SOUND";
 
     public static final long MAX_IMAGE_DOWNLOAD_SIZE = 1024 * 1024 * 25; // 25MB is max size for image download from Firebase Storage
 
-    private int fontSize;
-    private String fontFamily;
+
+    private static boolean sound = true;
     private static int appTheme = 0;
 
     public Settings(){
-        fontSize = 12;
-        fontFamily = "Arial";
     }
 
     public static int getTheme (boolean actionBar){
@@ -53,22 +52,6 @@ public class Settings {
         }
     }
 
-    public int getFontSize() {
-        return fontSize;
-    }
-
-    public void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
-    }
-
-    public String getFontFamily() {
-        return fontFamily;
-    }
-
-    public void setFontFamily(String fontFamily) {
-        this.fontFamily = fontFamily;
-    }
-
     public static void setAppTheme(int appTheme){
         Settings.appTheme = appTheme;
     }
@@ -77,21 +60,31 @@ public class Settings {
         return Settings.appTheme;
     }
 
+    public static boolean getSound() {
+        return sound;
+    }
+
+    public static void setSound(boolean sound) {
+        Settings.sound = sound;
+    }
+
     /*
         Loads user settings
      */
     public static void loadData(Context ctx){
         SharedPreferences prefs = ctx.getSharedPreferences(Settings.USER_PREFERENCE, MODE_PRIVATE);
         Settings.setAppTheme(prefs.getInt(Settings.SETTINGS_THEME, 0));
+        Settings.setSound(prefs.getBoolean(Settings.SETTINGS_CHECK_SOUND, true));
     }
 
     /*
         Saves user settings
      */
-    public static void saveData(Context ctx, int appTheme){
+    public static void saveData(Context ctx, int appTheme, boolean checkSound){
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(Settings.USER_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(Settings.SETTINGS_THEME, appTheme);
+        editor.putBoolean(Settings.SETTINGS_CHECK_SOUND, checkSound);
         editor.apply();
     }
 }
