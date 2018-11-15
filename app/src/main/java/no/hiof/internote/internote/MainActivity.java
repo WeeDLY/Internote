@@ -29,6 +29,7 @@ import java.util.Collections;
 
 import no.hiof.internote.internote.adapter.NoteRecyclerAdapter;
 import no.hiof.internote.internote.fragment.NavigationDrawerFragment;
+import no.hiof.internote.internote.model.Audio;
 import no.hiof.internote.internote.model.NoteOverview;
 import no.hiof.internote.internote.model.Settings;
 
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         if(user != null){
             toolbarTextUser.setText(user.getEmail());
             retrieveUserDocuments(user);
+            Audio.playSound(this, "Ding.mp3");
         }
         else{
             toolbarTextUser.setText("(Offline)");
@@ -155,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 notesKey.add(noteOverview.getKey());
                 Collections.sort(notes);
                 noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
+                Audio.playSound(getApplicationContext(), "Note.mp3");
             }
 
             @Override
