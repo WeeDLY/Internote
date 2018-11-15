@@ -39,7 +39,6 @@ public class NoteOverview extends Note implements Comparable<NoteOverview>{
 
     public void setTitleShort(String title){
         int difference = title.length() - Settings.MAX_TITLE_LENGTH;
-        Log.d("setTitleShort", String.valueOf(difference));
         if(difference > 0){
             String newTitle = getTitle().substring(0, Settings.MAX_TITLE_LENGTH - 3);
             newTitle += "...";
