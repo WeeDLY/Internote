@@ -109,7 +109,7 @@ public class NoteImageActivity extends AppCompatActivity {
     }
 
     /*
-        Android lifecycle: onPause event
+        Android lifecycle: onStop event
     */
     @Override
     protected void onPause() {
