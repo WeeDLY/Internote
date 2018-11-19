@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent;
                 if(note.getImageUrl() != null){
                     intent = new Intent(MainActivity.this, NoteImageActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
                 else{
                     intent = new Intent(MainActivity.this, NoteTextActivity.class);
@@ -132,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intentNoteImage = new Intent(MainActivity.this, NoteImageActivity.class);
+                intentNoteImage.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intentNoteImage);
             }
         });

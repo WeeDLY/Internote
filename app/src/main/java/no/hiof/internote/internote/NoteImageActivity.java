@@ -114,6 +114,9 @@ public class NoteImageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("onPause.madeChanges", String.valueOf(madeChanges));
+        Log.d("onPause.deleteNote", String.valueOf(deleteNote));
+        Log.d("onPause.accessingCamera", String.valueOf(accessingCamera));
         if(madeChanges && !deleteNote){
             Log.d("onPause", "SaveDoc");
             if(!accessingCamera)
@@ -186,6 +189,7 @@ public class NoteImageActivity extends AppCompatActivity {
     */
     public void getAnotherImage () {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the image should go
             File imageFile = null;
@@ -202,6 +206,7 @@ public class NoteImageActivity extends AppCompatActivity {
                 accessingCamera = true;
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                accessingCamera = false;
             }
         }
     }
