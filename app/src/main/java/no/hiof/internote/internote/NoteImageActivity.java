@@ -206,7 +206,6 @@ public class NoteImageActivity extends AppCompatActivity {
                 accessingCamera = true;
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-                accessingCamera = false;
             }
         }
     }
@@ -254,6 +253,7 @@ public class NoteImageActivity extends AppCompatActivity {
             catch (IOException e) {
                 e.printStackTrace();
             }
+            accessingCamera = false;
         }
     }
 
