@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         if(user != null){
             toolbarTextUser.setText(user.getEmail());
             retrieveUserDocuments(user);
-            Audio.playSound(this, "Ding.mp3");
         }
         else{
             toolbarTextUser.setText("(Offline)");

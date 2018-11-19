@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.IOException;
 import java.util.Arrays;
 
+import no.hiof.internote.internote.model.Audio;
 import no.hiof.internote.internote.model.Settings;
 
 public class LoginActivity extends AppCompatActivity {
@@ -53,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Sends user directly to MainActivity
     public void goToMain(){
+        Audio.playSound(this, "Ding.mp3");
         Intent intentMain = new Intent(this, MainActivity.class);
         startActivity(intentMain);
     }
