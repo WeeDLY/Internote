@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
 
-                noteOverview.setTitleShort(noteOverview.getTitle());
+                noteOverview.setTitle(noteOverview.getTitleShort());
 
                 notes.add(noteOverview);
                 notesKey.add(noteOverview.getKey());
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
 
-                noteOverview.setTitleShort(noteOverview.getTitle());
+                noteOverview.setTitle(noteOverview.getTitleShort());
 
                 int position = notesKey.indexOf(noteOverview.getKey());
                 notes.set(position, noteOverview);

@@ -30,15 +30,16 @@ public class NoteOverview extends Note implements Comparable<NoteOverview>{
     }
 
     /*
-        Shortens the title.
+        Shortens the title for CardView
      */
-    public void setTitleShort(String title){
-        int difference = title.length() - Settings.MAX_TITLE_LENGTH;
+    public String getTitleShort(){
+        int difference = getTitle().length() - Settings.MAX_TITLE_LENGTH;
         if(difference > 0){
             String newTitle = getTitle().substring(0, Settings.MAX_TITLE_LENGTH - 3);
             newTitle += "...";
-            setTitle(newTitle);
+            return newTitle;
         }
+        return getTitle();
     }
 
     @Override

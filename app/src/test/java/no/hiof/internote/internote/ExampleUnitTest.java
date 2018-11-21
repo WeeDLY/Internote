@@ -2,6 +2,8 @@ package no.hiof.internote.internote;
 
 import org.junit.Test;
 
+import no.hiof.internote.internote.model.NoteOverview;
+
 import static org.junit.Assert.*;
 
 /**
@@ -13,5 +15,11 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
+    }
+
+    @Test
+    public void shortenTitle_isCorrect(){
+        NoteOverview noteOverview = new NoteOverview("LangTittelDette", 1542648789109L, "");
+        assertEquals("LangTitte...", noteOverview.getTitleShort());
     }
 }
