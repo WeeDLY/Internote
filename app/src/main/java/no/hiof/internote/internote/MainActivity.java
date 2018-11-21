@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
 
-                Log.d("descending", String.valueOf(Settings.getDescending()));
                 int position = notesKey.indexOf(noteOverview.getKey());
                 notes.remove(position);
                 notesKey.remove(position);
