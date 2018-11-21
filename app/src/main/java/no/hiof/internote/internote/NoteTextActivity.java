@@ -213,7 +213,7 @@ public class NoteTextActivity extends AppCompatActivity {
         noteDetailedReference.setValue(noteDetailed);
 
 
-        // NoteOver does not exist, writes a new NoteOverview to database
+        // NoteOverview does not exist, writes a new NoteOverview to database
         if(currentNoteOverviewKey == null){
             DatabaseReference noteOverviewReference = userReference.child(Settings.FIREBASE_NOTE_OVERVIEW).push();
             noteOverviewReference.setValue(new NoteOverview(noteDetailed, noteDetailedReference.getKey()));
