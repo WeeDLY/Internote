@@ -59,6 +59,10 @@ public class NoteOverview extends Note implements Comparable<NoteOverview>{
     public int compareTo(NoteOverview o) {
         if (o.getLastEdited() == this.getLastEdited())
             return 0;
-        return o.getLastEdited() > this.getLastEdited() ? 1 : -1;
+
+        if(Settings.getDescending())
+            return o.getLastEdited() > this.getLastEdited() ? 1 : -1;
+        else
+            return o.getLastEdited() > this.getLastEdited() ? -1 : 1;
     }
 }

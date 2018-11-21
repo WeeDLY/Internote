@@ -14,10 +14,12 @@ public class Settings {
 
     public static final String INTENT_NOTEDETAILED_KEY = "INTENT_NOTE_DETAILED"; // NoteDetailedKey. Used to update NoteDetailed
     public static final String INTENT_NOTEOVERVIEW_KEY = "INTENT_NOTE_OVERVIEW"; // NoteOverviewKey. Used to update "lastEdited"
+    public static final String INTENT_REFRESH_RECYCLER = "INTENT_REFRESH_RECYCLER";
 
-    public static final String USER_PREFERENCE = "USER_PREFERENCE";
-    public static final String SETTINGS_THEME = "SETTINGS_THEME";
-    public static final String SETTINGS_CHECK_SOUND = "SETTINGS_CHECK_SOUND";
+    private static final String USER_PREFERENCE = "USER_PREFERENCE";
+    private static final String SETTINGS_THEME = "SETTINGS_THEME";
+    private static final String SETTINGS_CHECK_SOUND = "SETTINGS_CHECK_SOUND";
+    public static final String SETTINGS_CHECK_DESCENDING = "SETTINGS_CHECK_DESCENDING";
 
     /* Settings variables */
     public static final long MAX_IMAGE_DOWNLOAD_SIZE = 1024 * 1024 * 25; // 25MB is max size for image download from Firebase Storage
@@ -25,6 +27,7 @@ public class Settings {
 
     private static boolean sound = true;
     private static int appTheme = 0;
+    private static boolean descending = true;
 
     public static int getTheme (boolean actionBar){
         if(actionBar){
@@ -67,6 +70,14 @@ public class Settings {
         Settings.sound = sound;
     }
 
+    public static boolean getDescending() {
+        return descending;
+    }
+
+    public static void setDescending(boolean descending) {
+        Settings.descending = descending;
+    }
+
     /*
         Loads user settings
      */
@@ -74,16 +85,18 @@ public class Settings {
         SharedPreferences prefs = ctx.getSharedPreferences(Settings.USER_PREFERENCE, MODE_PRIVATE);
         Settings.setAppTheme(prefs.getInt(Settings.SETTINGS_THEME, 0));
         Settings.setSound(prefs.getBoolean(Settings.SETTINGS_CHECK_SOUND, true));
+        Settings.setDescending(prefs.getBoolean(Settings.SETTINGS_CHECK_DESCENDING, true));
     }
 
     /*
         Saves user settings
      */
-    public static void saveData(Context ctx, int appTheme, boolean checkSound){
+    public static void saveData(Context ctx, int appTheme, boolean checkSound, boolean descending){
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(Settings.USER_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(Settings.SETTINGS_THEME, appTheme);
         editor.putBoolean(Settings.SETTINGS_CHECK_SOUND, checkSound);
+        editor.putBoolean(Settings.SETTINGS_CHECK_DESCENDING, descending);
         editor.apply();
     }
 }

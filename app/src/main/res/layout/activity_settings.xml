@@ -27,9 +27,72 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView_sound"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSettings" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSettings"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+    <TextView
+        android:id="@+id/textView_sound"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="12dp"
+        android:onClick="TextView_sound_onClick"
+        android:text="@string/sound"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView_descending"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxSound"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SpinnerColorTheme" />
+
+    <CheckBox
+        android:id="@+id/checkBoxSound"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="end"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_sound"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView_sound"
+        app:layout_constraintTop_toTopOf="@+id/textView_sound"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView_descending"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
+        android:onClick="TextView_descending_onClick"
+        android:text="@string/settings_sort_notes"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_applyChanges"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxDescending"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_sound" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDescending"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="end"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_descending"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView_descending"
+        app:layout_constraintTop_toTopOf="@+id/textView_descending" />
 
     <Button
         android:id="@+id/button_applyChanges"
@@ -37,34 +100,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_apply_changes"
         android:onClick="applyChanges"
+        android:padding="10dp"
         android:text="@string/apply_changes"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/btn_apply_changes"
-        android:padding="10dp"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <CheckBox
-        android:id="@+id/checkBoxSound"
-        android:layout_width="32dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="30dp"
-        android:gravity="end"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SpinnerColorTheme" />
-
-    <TextView
-        android:id="@+id/textView_sound"
-        android:layout_width="0dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="12dp"
-        android:onClick="TextView_sound_onClick"
-        android:text="@string/sound"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/checkBoxSound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SpinnerColorTheme" />
 </android.support.constraint.ConstraintLayout>

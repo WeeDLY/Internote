@@ -20,15 +20,22 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner spinnerColorTheme;
 
     private CheckBox checkSound;
+    private CheckBox checkDescending;
+
+    private boolean descendingStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(Settings.getTheme());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        descendingStart = Settings.getDescending();
+
         setUpSpinner();
         setUpCheckSound();
+        setUpCheckDescending();
     }
 
     private void setUpSpinner(){
@@ -66,11 +73,15 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    public void applyChanges(View view){
-        saveData();
-
-        Intent intentMain = new Intent(this, MainActivity.class);
-        startActivity(intentMain);
+    private void setUpCheckDescending(){
+        checkDescending = findViewById(R.id.checkBoxDescending);
+        checkDescending.setChecked(Settings.getDescending());
+        checkDescending.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Settings.setDescending(isChecked);
+            }
+        });
     }
 
     /*
@@ -79,11 +90,27 @@ public class SettingsActivity extends AppCompatActivity {
     public void saveData(){
         int appTheme = spinnerColorTheme.getSelectedItemPosition();
         boolean sound = checkSound.isChecked();
-        Settings.saveData(this, appTheme, sound);
+        boolean descending = checkDescending.isChecked();
+        Settings.saveData(this, appTheme, sound, descending);
     }
 
     public void TextView_sound_onClick(View view) {
-        checkSound.setChecked(checkSound.isChecked() ? false : true);
+        checkSound.setChecked(!checkSound.isChecked());
         Settings.setSound(checkSound.isChecked());
+    }
+
+    public void TextView_descending_onClick(View view) {
+        checkDescending.setChecked(!checkDescending.isChecked());
+        Settings.setDescending(checkDescending.isChecked());
+    }
+
+    public void applyChanges(View view){
+        saveData();
+
+        Intent intentMain = new Intent(this, MainActivity.class);
+        if(descendingStart != Settings.getDescending()){
+            intentMain.putExtra(Settings.INTENT_REFRESH_RECYCLER, true);
+        }
+        startActivity(intentMain);
     }
 }

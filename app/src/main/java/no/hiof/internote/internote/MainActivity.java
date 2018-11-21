@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionMenu floatingActionMenu;
     private FloatingActionButton newImagenote, newTextnote;
 
+    private boolean descending = true;
+
     /*
         onCreate lifecycle
      */
@@ -72,16 +74,33 @@ public class MainActivity extends AppCompatActivity {
         setUpFloatingActionButton();
         setUpRecyclerView();
         setUpNavigationDrawer();
-        retrieveUserDocuments(user);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        boolean refreshRecyclerView = getIntent().getBooleanExtra(Settings.INTENT_REFRESH_RECYCLER, false);
+        if(refreshRecyclerView){
+            int size = notes.size();
+            Collections.sort(notes);
+            notesKey.clear();
+            for(NoteOverview note : notes){
+                notesKey.add(note.getKey());
+            }
+            noteRecyclerAdapter.notifyItemChanged(0, size);
+        }
     }
 
     /*
-        Sets up Navigation Drawer
-     */
+            Sets up Navigation Drawer
+         */
     private void setUpNavigationDrawer() {
         navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentNavigationDrawer);
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         navigationDrawerFragment.setUpDrawer(drawerLayout, toolbar);
+
+        retrieveUserDocuments(user);
     }
 
     /*
@@ -168,15 +187,22 @@ public class MainActivity extends AppCompatActivity {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
 
+                Log.d("descending", String.valueOf(Settings.getDescending()));
                 int position = notesKey.indexOf(noteOverview.getKey());
                 notes.remove(position);
                 notesKey.remove(position);
 
-                notes.add(0, noteOverview);
-                notesKey.add(0, noteOverview.getKey());
+                int newPosition = Settings.getDescending() ? 0 : notes.size();
+                notes.add(newPosition, noteOverview);
+                notesKey.add(newPosition, noteOverview.getKey());
 
-                noteRecyclerAdapter.notifyItemRemoved(position);
-                noteRecyclerAdapter.notifyItemInserted(0);
+                if (position == newPosition){
+                    noteRecyclerAdapter.notifyItemChanged(position);
+                }
+                else{
+                    noteRecyclerAdapter.notifyItemRemoved(position);
+                    noteRecyclerAdapter.notifyItemInserted(newPosition);
+                }
             }
 
             @Override

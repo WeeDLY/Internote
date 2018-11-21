@@ -26,4 +26,5 @@
     <string name="textView_no_internet">This application requires an internet connection</string>
     <string name="exit">Exit</string>
     <string name="retry">Retry</string>
+    <string name="settings_sort_notes">Sort notes Descending</string>
 </resources>
