@@ -64,7 +64,15 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
+        setUpFloatingActionButton();
+        setUpRecyclerView();
+        setUpNavigationDrawer();
+    }
+
+    @Override
+    protected void onResume() {
         TextView toolbarTextUser = findViewById(R.id.toolbarTextUser);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         // user is logged in
         if(user != null){
@@ -74,14 +82,12 @@ public class MainActivity extends AppCompatActivity {
         else{
             toolbarTextUser.setText("(Offline)");
         }
-        setUpFloatingActionButton();
-        setUpRecyclerView();
-        setUpNavigationDrawer();
+        super.onResume();
     }
 
     /*
-        Sets up Navigation Drawer
-     */
+            Sets up Navigation Drawer
+         */
     private void setUpNavigationDrawer() {
         navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentNavigationDrawer);
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
@@ -121,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
         Sets up the floating action button
      */
     public void setUpFloatingActionButton() {
-
         floatingActionMenu = findViewById(R.id.fab);
         newImagenote = findViewById(R.id.fab_newImagenote);
         newTextnote = findViewById(R.id.fab_newTextnote);
@@ -148,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
         Retrieves documents that the user has
     */
     private void retrieveUserDocuments(FirebaseUser user){
+        int size = notes.size();
+        notes.clear();
+        notesKey.clear();
+        noteRecyclerAdapter.notifyItemRangeRemoved(0, size);
+
         FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
         DatabaseReference documentsReference = databaseReference.getReference();
         documentsReference = documentsReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_OVERVIEW);
