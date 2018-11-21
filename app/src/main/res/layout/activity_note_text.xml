@@ -41,17 +41,17 @@
 
     <EditText
         android:id="@+id/textContent"
-        android:layout_width="match_parent"
-        android:layout_height="377dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:gravity="top"
         android:hint="@string/note_text_content_filler"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/btnBack"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHeader" />
@@ -62,17 +62,5 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.2" />
-
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/back_to_main"
-        android:onClick="btnBackOnClick"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="?android:attr/homeAsUpIndicator"
-        android:background="@drawable/btn_apply_changes"
-        />
 
 </android.support.constraint.ConstraintLayout>

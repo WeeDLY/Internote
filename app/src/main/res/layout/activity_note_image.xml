@@ -84,17 +84,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
-    <ImageButton
-        android:id="@+id/btnBackToMain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/btn_apply_changes"
-        android:onClick="btnBackToMainOnClick"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="?attr/homeAsUpIndicator"
-        android:contentDescription="@string/contentDescription_activity_note_image_btnBackToMain" />
-
 </android.support.constraint.ConstraintLayout>

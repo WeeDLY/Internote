@@ -276,10 +276,6 @@ public class NoteImageActivity extends AppCompatActivity {
                     goToMain();
                 }
                 break;
-            // Goes back to MainActivity
-            case R.id.menuBackToMain:
-                goToMain();
-                break;
         }
         return super.onOptionsItemSelected(item);
     }

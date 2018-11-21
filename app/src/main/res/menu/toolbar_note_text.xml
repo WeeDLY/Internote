@@ -11,9 +11,4 @@
         app:showAsAction="never"
         android:title="@string/convert_to_image_note">
     </item>
-    <item
-        android:id="@+id/menuBackToMain"
-        app:showAsAction="never"
-        android:title="@string/back_to_main">
-    </item>
 </menu>

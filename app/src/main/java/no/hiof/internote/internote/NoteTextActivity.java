@@ -122,10 +122,6 @@ public class NoteTextActivity extends AppCompatActivity {
                 imageIntent.putExtra(Settings.INTENT_NOTEOVERVIEW_KEY, currentNoteOverviewKey);
                 startActivity(imageIntent);
                 break;
-            // Goes back to MainActivity
-            case R.id.menuBackToMain:
-                goToMain();
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
