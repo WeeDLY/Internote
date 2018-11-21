@@ -23,4 +23,6 @@
     <string name="contentDescription_activity_note_image_btnBackToMain">Click to go back to main</string>
     <string name="apply_changes">Apply Changes</string>
     <string name="sound">Sound</string>
+    <string name="textView_no_internet">This application requires an internet connection</string>
+    <string name="exit">Exit</string>
 </resources>

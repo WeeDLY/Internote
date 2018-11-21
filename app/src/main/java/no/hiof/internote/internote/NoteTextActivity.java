@@ -5,7 +5,10 @@ import java.util.Date;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -190,9 +193,23 @@ public class NoteTextActivity extends AppCompatActivity {
     }
 
     /*
+        Checks if user has internet connection
+     */
+    private boolean hasNetworkConnection(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    /*
         Saves the current document and moves user to MainActivity
      */
     private void saveDocument(Context context){
+        if(!hasNetworkConnection()){
+            Toast.makeText(context, "Note was not saved, due to no internet connection :(", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // Update current noteDetailed
         noteDetailed.setTitle(textTitle.getText().toString());
         noteDetailed.setContent(textContent.getText().toString());

@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -387,9 +389,23 @@ public class NoteImageActivity extends AppCompatActivity {
     }
 
     /*
+        Checks if user has internet connection
+    */
+    private boolean hasNetworkConnection(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    /*
         Saves the current document to firebase
      */
     private void saveDocument(Context context){
+        if(!hasNetworkConnection()){
+            Toast.makeText(context, "Note was not saved, due to no internet connection :(", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // Upload image(if image was taken)
         String imagePath = uploadImage();
         if(imagePath != null){

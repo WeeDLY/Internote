@@ -1,11 +1,15 @@
 package no.hiof.internote.internote;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -38,6 +42,13 @@ public class LoginActivity extends AppCompatActivity {
         if(internetAvailable){
             firebaseAuth = FirebaseAuth.getInstance();
             createAuthenticationListener();
+        }
+        else{
+            TextView textInternetNotification = findViewById(R.id.textInternetNotification);
+            textInternetNotification.setVisibility(View.VISIBLE);
+
+            Button btnExitApp = findViewById(R.id.btnExitApp);
+            btnExitApp.setVisibility(View.VISIBLE);
         }
     }
 
@@ -112,5 +123,12 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "You must be signed in", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /*
+        Button: btnExitApp. Exits the application
+     */
+    public void btnExitApp_onClick(View view) {
+        System.exit(1);
     }
 }
