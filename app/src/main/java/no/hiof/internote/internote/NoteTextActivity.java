@@ -146,7 +146,6 @@ public class NoteTextActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if(madeChanges && !deleteNote){
-            Log.d("SaveDocument", "SAVED");
             saveDocument(this);
         }
     }
@@ -185,7 +184,7 @@ public class NoteTextActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("retrieveDocument.cancel", "something went funky wunky");
+                Log.d("retrieveDocument.cancel", databaseError.getMessage());
             }
         });
     }

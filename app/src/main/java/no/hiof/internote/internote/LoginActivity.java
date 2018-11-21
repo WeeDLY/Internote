@@ -2,13 +2,10 @@ package no.hiof.internote.internote;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -74,7 +71,6 @@ public class LoginActivity extends AppCompatActivity {
 
     // Creates a authentication listener that prompts the user to log in
     private void createAuthenticationListener() {
-        Log.i("tag", "CreateAuthentication listener");
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
