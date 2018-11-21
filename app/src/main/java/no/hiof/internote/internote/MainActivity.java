@@ -64,25 +64,21 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
-        setUpFloatingActionButton();
-        setUpRecyclerView();
-        setUpNavigationDrawer();
-    }
-
-    @Override
-    protected void onResume() {
         TextView toolbarTextUser = findViewById(R.id.toolbarTextUser);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         // user is logged in
         if(user != null){
             toolbarTextUser.setText(user.getEmail());
-            retrieveUserDocuments(user);
         }
         else{
             toolbarTextUser.setText("(Offline)");
         }
-        super.onResume();
+
+        setUpFloatingActionButton();
+        setUpRecyclerView();
+        setUpNavigationDrawer();
+        retrieveUserDocuments(user);
     }
 
     /*
@@ -153,10 +149,10 @@ public class MainActivity extends AppCompatActivity {
         Retrieves documents that the user has
     */
     private void retrieveUserDocuments(FirebaseUser user){
-        int size = notes.size();
+        /*int size = notes.size();
         notes.clear();
         notesKey.clear();
-        noteRecyclerAdapter.notifyItemRangeRemoved(0, size);
+        noteRecyclerAdapter.notifyItemRangeRemoved(0, size);*/
 
         FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
         DatabaseReference documentsReference = databaseReference.getReference();
@@ -168,11 +164,13 @@ public class MainActivity extends AppCompatActivity {
                 noteOverview.setKey(dataSnapshot.getKey());
 
                 noteOverview.setTitle(noteOverview.getTitleShort());
+                notes.add(0, noteOverview);
 
-                notes.add(noteOverview);
-                notesKey.add(noteOverview.getKey());
                 Collections.sort(notes);
-                noteRecyclerAdapter.notifyItemInserted(notes.size() - 1);
+                int position = notes.indexOf(noteOverview);
+                notesKey.add(position, noteOverview.getKey());
+
+                noteRecyclerAdapter.notifyItemInserted(position);
                 Audio.playSound(getApplicationContext(), "Note.mp3");
             }
 
@@ -181,12 +179,15 @@ public class MainActivity extends AppCompatActivity {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
 
-                noteOverview.setTitle(noteOverview.getTitleShort());
-
                 int position = notesKey.indexOf(noteOverview.getKey());
-                notes.set(position, noteOverview);
-                Collections.sort(notes);
-                noteRecyclerAdapter.notifyItemChanged(position);
+                notes.remove(position);
+                notesKey.remove(position);
+
+                notes.add(0, noteOverview);
+                notesKey.add(0, noteOverview.getKey());
+
+                noteRecyclerAdapter.notifyItemRemoved(position);
+                noteRecyclerAdapter.notifyItemInserted(0);
             }
 
             @Override
@@ -202,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
 
             @Override
