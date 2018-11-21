@@ -226,7 +226,7 @@ public class NoteTextActivity extends AppCompatActivity {
         }
 
         // Display that it was saved and auto-moves user to MainActivity
-        Toast.makeText(context, "Saved note: " + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Saved note: " + noteDetailed.getTitle(), Toast.LENGTH_LONG).show();
     }
 
     /*

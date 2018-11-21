@@ -335,13 +335,13 @@ public class NoteImageActivity extends AppCompatActivity {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failed image upload" + noteDetailedReference.getKey(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Image failed to upload", Toast.LENGTH_LONG).show();
             }
         });
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(getApplicationContext(), "image uploaded Successfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Image uploaded successfully", Toast.LENGTH_LONG).show();
             }
         });
 
