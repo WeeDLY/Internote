@@ -111,9 +111,9 @@ public class LoginActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 firebaseUser = firebaseAuth.getCurrentUser();
                 goToMain();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
-                finish();
+            }
+            else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "You must be signed in", Toast.LENGTH_SHORT).show();
             }
         }
     }
