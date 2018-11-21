@@ -103,6 +103,11 @@ public class NoteTextActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             // Deletes the note
             case R.id.menuDeleteNote:
+                // Note does not exist in Firebase, do nothing.
+                if(currentNoteDetailedKey == null){
+                    break;
+                }
+
                 deleteNote = true;
                 if(user != null && currentNoteDetailedKey != null && currentNoteOverviewKey != null){
                     DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
