@@ -67,13 +67,7 @@ public class MainActivity extends AppCompatActivity {
         TextView toolbarTextUser = findViewById(R.id.toolbarTextUser);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        // user is logged in
-        if(user != null){
-            toolbarTextUser.setText(user.getEmail());
-        }
-        else{
-            toolbarTextUser.setText("(Offline)");
-        }
+        toolbarTextUser.setText((user != null) ? user.getEmail() : "(Offline)");
 
         setUpFloatingActionButton();
         setUpRecyclerView();
@@ -82,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-            Sets up Navigation Drawer
-         */
+        Sets up Navigation Drawer
+     */
     private void setUpNavigationDrawer() {
         navigationDrawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentNavigationDrawer);
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
@@ -149,11 +143,6 @@ public class MainActivity extends AppCompatActivity {
         Retrieves documents that the user has
     */
     private void retrieveUserDocuments(FirebaseUser user){
-        /*int size = notes.size();
-        notes.clear();
-        notesKey.clear();
-        noteRecyclerAdapter.notifyItemRangeRemoved(0, size);*/
-
         FirebaseDatabase databaseReference = FirebaseDatabase.getInstance();
         DatabaseReference documentsReference = databaseReference.getReference();
         documentsReference = documentsReference.child(user.getUid()).child(Settings.FIREBASE_NOTE_OVERVIEW);
