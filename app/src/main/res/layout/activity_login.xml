@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/textView_no_internet"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/btnExitApp"
+        app:layout_constraintBottom_toTopOf="@+id/btnRetry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,20 +23,34 @@
         app:layout_constraintVertical_chainStyle="spread" />
 
     <Button
-        android:id="@+id/btnExitApp"
+        android:id="@+id/btnRetry"
         android:layout_width="wrap_content"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/btn_apply_changes"
+        android:onClick="btnRetry_onClick"
+        android:visibility="invisible"
+        android:text="@string/retry"
+        app:layout_constraintBottom_toTopOf="@+id/btnExitApp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInternetNotification" />
+
+    <Button
+        android:id="@+id/btnExitApp"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/btn_apply_changes"
         android:onClick="btnExitApp_onClick"
         android:text="@string/exit"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInternetNotification" />
+        app:layout_constraintTop_toBottomOf="@+id/btnRetry" />
 </android.support.constraint.ConstraintLayout>

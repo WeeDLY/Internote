@@ -47,6 +47,9 @@ public class LoginActivity extends AppCompatActivity {
             TextView textInternetNotification = findViewById(R.id.textInternetNotification);
             textInternetNotification.setVisibility(View.VISIBLE);
 
+            Button btnRetry = findViewById(R.id.btnRetry);
+            btnRetry.setVisibility(View.VISIBLE);
+
             Button btnExitApp = findViewById(R.id.btnExitApp);
             btnExitApp.setVisibility(View.VISIBLE);
         }
@@ -130,5 +133,14 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void btnExitApp_onClick(View view) {
         System.exit(1);
+    }
+
+    /*
+        Button: btnRetry. Restarts the application
+     */
+    public void btnRetry_onClick(View view) {
+        Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage( getBaseContext().getPackageName() );
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
