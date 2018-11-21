@@ -114,11 +114,7 @@ public class NoteImageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("onPause.madeChanges", String.valueOf(madeChanges));
-        Log.d("onPause.deleteNote", String.valueOf(deleteNote));
-        Log.d("onPause.accessingCamera", String.valueOf(accessingCamera));
         if(madeChanges && !deleteNote){
-            Log.d("onPause", "SaveDoc");
             if(!accessingCamera)
                 saveDocument(this);
         }
@@ -244,7 +240,6 @@ public class NoteImageActivity extends AppCompatActivity {
 
                 // Delete last image from firebase, if it existed
                 if(noteDetailed.getImageUrl() != null){
-                    Log.d("noteDetailed: ", noteDetailed.getImageUrl());
                     StorageReference storageImages = FirebaseStorage.getInstance().getReference().child(noteDetailed.getImageUrl());
                     storageImages.delete();
                     noteDetailed.setImageUrl("");
@@ -385,7 +380,7 @@ public class NoteImageActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("retrieveDocument.cancel", "something went funky wunky");
+                Log.d("retrieveDocument.cancel", databaseError.getMessage());
             }
         });
     }

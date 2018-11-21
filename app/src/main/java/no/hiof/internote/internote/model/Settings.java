@@ -8,6 +8,7 @@ import no.hiof.internote.internote.R;
 import static android.content.Context.MODE_PRIVATE;
 
 public class Settings {
+    /* Constant string for intents, settings name, etc */
     public static final String FIREBASE_NOTE_OVERVIEW = "NoteOverview";
     public static final String FIREBASE_NOTE_DETAILED = "NoteDetailed";
 
@@ -18,14 +19,12 @@ public class Settings {
     public static final String SETTINGS_THEME = "SETTINGS_THEME";
     public static final String SETTINGS_CHECK_SOUND = "SETTINGS_CHECK_SOUND";
 
+    /* Settings variables */
     public static final long MAX_IMAGE_DOWNLOAD_SIZE = 1024 * 1024 * 25; // 25MB is max size for image download from Firebase Storage
     public static final int MAX_TITLE_LENGTH = 12; // Max length on the title field in the note overview
 
     private static boolean sound = true;
     private static int appTheme = 0;
-
-    public Settings(){
-    }
 
     public static int getTheme (boolean actionBar){
         if(actionBar){

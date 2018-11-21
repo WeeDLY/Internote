@@ -1,9 +1,7 @@
 package no.hiof.internote.internote.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import no.hiof.internote.internote.NoteTextActivity;
 import no.hiof.internote.internote.R;
 import no.hiof.internote.internote.model.NoteOverview;
 
@@ -70,6 +67,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
 
         public void setData(NoteOverview current) {
             this.title.setText(current.getTitle());
+
 
             String imageUrl = current.getImageUrl();
             Date lastEditedDate = new Date(current.getLastEdited());

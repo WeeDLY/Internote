@@ -3,9 +3,14 @@ package no.hiof.internote.internote.model;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-import android.util.Log;
 
+/*
+    Audio class: Plays sounds
+ */
 public class Audio {
+    /*
+        Method: Plays a sounds
+     */
     public static void playSound(Context ctx, String soundFile) {
         if(!Settings.getSound()){
             return;
@@ -25,9 +30,8 @@ public class Audio {
             m.prepare();
             m.setVolume(1f, 1f);
             m.start();
-            Log.d("PLAY_SOUND", soundFile + " YES");
-        } catch (Exception e) {
-            Log.d("PLAY_SOUND", soundFile + " NO");
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

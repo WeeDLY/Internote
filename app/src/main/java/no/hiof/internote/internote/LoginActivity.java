@@ -15,7 +15,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import no.hiof.internote.internote.model.Audio;
