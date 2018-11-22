@@ -32,6 +32,7 @@ public class NoteOverview extends Note implements Comparable<NoteOverview>{
     /*
         Shortens the title for CardView
      */
+    @Exclude
     public String getTitleShort(){
         int difference = getTitle().length() - Settings.MAX_TITLE_LENGTH;
         if(difference > 0){

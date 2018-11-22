@@ -171,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
                 NoteOverview noteOverview = dataSnapshot.getValue(NoteOverview.class);
                 noteOverview.setKey(dataSnapshot.getKey());
 
-                noteOverview.setTitle(noteOverview.getTitleShort());
                 notes.add(0, noteOverview);
 
                 Collections.sort(notes);

@@ -66,7 +66,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         }
 
         public void setData(NoteOverview current) {
-            this.title.setText(current.getTitle());
+            this.title.setText(current.getTitleShort());
 
 
             String imageUrl = current.getImageUrl();
