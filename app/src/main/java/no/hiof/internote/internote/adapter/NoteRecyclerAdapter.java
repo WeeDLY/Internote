@@ -68,7 +68,6 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         public void setData(NoteOverview current) {
             this.title.setText(current.getTitleShort());
 
-
             String imageUrl = current.getImageUrl();
             Date lastEditedDate = new Date(current.getLastEdited());
             this.lastEdited.setText(new SimpleDateFormat("HH:mm dd-MM-yyyy").format(lastEditedDate));
